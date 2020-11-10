@@ -2,7 +2,7 @@
  * Zugzwang Project
  * SQL for installation of certificates module
  *
- * http://www.zugzwang.org/modules/certificates
+ * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
  * @copyright Copyright © 2020 Gustaf Mossakowski
