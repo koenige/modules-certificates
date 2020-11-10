@@ -2,11 +2,11 @@
 
 // Zugzwang Project
 // deutsche-schachjugend.de
-// Copyright (c) 2016 Gustaf Mossakowski <gustaf@koenige.org>
+// Copyright (c) 2016, 2020 Gustaf Mossakowski <gustaf@koenige.org>
 // Formulare: Urkunden
 
 
-require_once $zz_conf['form_scripts'].'/urkunden.php';
+$zz = zzform_include_table('urkunden');
 
 if (!brick_access_rights('Webmaster')) {
 	$zz['access'] = 'none';
