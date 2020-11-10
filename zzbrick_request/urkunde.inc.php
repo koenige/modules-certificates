@@ -31,7 +31,7 @@ function mod_certificates_urkunde($params) {
 	$sql = 'SELECT event_id, event, runden, YEAR(events.date_begin) AS jahr
 			, urkunde_ort, urkunde_datum
 			, urkunde_unterschrift1, urkunde_unterschrift2
-			, urkunden.kennung AS urkunde_kennung
+			, certificates.identifier AS urkunde_kennung
 			, SUBSTRING_INDEX(series.path, "/", -1) AS series_path
 			, SUBSTRING_INDEX(SUBSTRING(series.path FROM 8), "/", 1) AS main_series
 			, series.category AS series
@@ -47,7 +47,7 @@ function mod_certificates_urkunde($params) {
 			ON events.series_category_id = series.category_id
 		LEFT JOIN categories event_categories
 			ON events.event_category_id = event_categories.category_id
-		LEFT JOIN urkunden USING (urkunde_id)
+		LEFT JOIN certificates USING (certificate_id)
 		WHERE events.identifier = "%d/%s"';
 	$sql = sprintf($sql, $params[0], wrap_db_escape($params[1]));
 	$turnier = wrap_db_fetch($sql);

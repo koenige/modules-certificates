@@ -9,11 +9,11 @@
  */
 
 
-CREATE TABLE `urkunden` (
-  `urkunde_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `urkunde_titel` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kennung` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-  `kommentar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`urkunde_id`),
-  UNIQUE KEY `kennung` (`kennung`)
+CREATE TABLE `certificates` (
+  `certificate_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `certificate` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `identifier` varchar(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `remarks` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`certificate_id`),
+  UNIQUE KEY `identifier` (`identifier`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
