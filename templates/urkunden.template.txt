@@ -1,0 +1,32 @@
+# deutsche-schachjugend.de / dem2012.de
+# Copyright (c) 2012, 2014, 2016-2017, 2020 Gustaf Mossakowski <gustaf@koenige.org>
+# HTML-Ausgabe: Urkunden
+#
+<h1>Urkunden
+<br><a href="../">%%% item event %%% %%% item dauer wrap_date %%%</a></h1>
+
+%%% condition if keine_spieler %%%
+<p class="note"><strong>Hinweis:</strong> Es sind noch keine Spieler bei dem Turnier eingetragen.</p>
+
+%%% condition else %%%
+<ul>
+%%% loop start %%%
+<li><a href="../../../%%% item identifier %%%/urkunden/teilnahme.pdf">%%% item event %%%</a>
+%%% loop platz %%%
+ | <a href="../../../%%% item identifier %%%/urkunden/platz%%% item bereich "-%s" %%%.pdf">%%% item event %%% %%% item bereich "(%s)" %%% mit Plätzen</a>
+%%% loop end %%%
+%%% condition if spezialurkunden %%%
+ | <a href="../../../%%% item identifier %%%/urkunden/spezial.pdf">%%% item event %%% Spezial</a>
+%%% condition endif %%%
+</li>
+%%% loop end %%%
+</ul>
+%%% condition endif %%%
+
+<p>Platzurkunden mit Platzierungen können erst nach Ende des Turniers erstellt werden.
+Vor Ende des Turniers werden Platzurkunden mit leeren Platzierungen ausgegeben,
+die mit Filzstift ausgefüllt werden können. <strong>Achtung:</strong> Während der
+letzten Runde könnnen ggf. bereits Urkunden mit Plätzen ausgegeben werden,
+auch wenn das Turnier noch läuft.</p>
+
+<p><a href="/intern/urkunden/">Galerie aller Urkunden</a></p>
