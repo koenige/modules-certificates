@@ -1,7 +1,7 @@
 <?php 
 
 // dem2012.de
-// Copyright (c) 2008, 2012, 2014, 2019 Gustaf Mossakowski, <gustaf@koenige.org>
+// Copyright (c) 2008, 2012, 2014, 2019-2020 Gustaf Mossakowski, <gustaf@koenige.org>
 // Eingabeskript Urkunden
 
 
@@ -33,9 +33,9 @@ $zz['fields'][15]['image'][0]['path'] = $zz['fields'][15]['path'];
 $zz['fields'][2]['title'] = 'Titel der Urkunde';
 $zz['fields'][2]['field_name'] = 'certificate';
 
-$zz['fields'][3]['field_name'] = 'kennung';
+$zz['fields'][3]['field_name'] = 'identifier';
 $zz['fields'][3]['type'] = 'identifier';
-$zz['fields'][3]['fields'] = ['certificate', 'kennung'];
+$zz['fields'][3]['fields'] = ['certificate', 'identifier'];
 $zz['fields'][3]['hide_in_list'] = true;
 
 $zz['fields'][4]['field_name'] = 'remarks';
