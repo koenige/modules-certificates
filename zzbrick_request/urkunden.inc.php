@@ -6,9 +6,7 @@
 
 
 function mod_certificates_urkunden($params) {
-	if (empty($params)) {
-		return brick_format('%%% forms urkunden %%%');
-	}
+	if (count($params) !== 2) return false;
 	
 	$sql = 'SELECT events.event_id, events.identifier, events.event
 			, YEAR(events.date_begin) AS jahr
