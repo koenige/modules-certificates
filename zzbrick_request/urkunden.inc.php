@@ -10,7 +10,7 @@ function mod_certificates_urkunden($params) {
 	
 	$sql = 'SELECT events.event_id, events.identifier, events.event
 			, YEAR(events.date_begin) AS jahr
-			, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS dauer
+			, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS duration
 			, (SELECT COUNT(teilnahme_id) FROM teilnahmen
 				WHERE NOT ISNULL(urkundentext)
 				AND event_id = events.event_id) AS spezialurkunden
@@ -43,7 +43,7 @@ function mod_certificates_urkunden($params) {
 	if (!$data) {
 		$sql = 'SELECT events.event_id, events.identifier, events.event
 				, YEAR(events.date_begin) AS jahr
-				, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS dauer
+				, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS duration
 				, IFNULL(place, places.contact) AS turnierort
 			FROM events
 			LEFT JOIN contacts places
@@ -55,8 +55,8 @@ function mod_certificates_urkunden($params) {
 		$sql = sprintf($sql, $params[0], wrap_db_escape($params[1]));
 		$data = wrap_db_fetch($sql);
 		$data['keine_spieler'] = true;
-		$event['dauer'] = $data['dauer'];
 		$event['jahr'] = $data['jahr'];
+		$event['duration'] = $data['duration'];
 	} else {
 		foreach ($data as $event_id => $turnier) {
 			$tabellenstaende = explode(',', $turnier['tabellenstaende']);
@@ -75,13 +75,13 @@ function mod_certificates_urkunden($params) {
 		} else {
 			$data['event'] = $event['event'];
 		}
-		$data['dauer'] = $event['dauer'];
+		$data['duration'] = $event['duration'];
 		$data['turnierort'] = $event['turnierort'];
 	}
 
 	$page['text'] = wrap_template('urkunden', $data);
-	$page['title'] = $data['event'].', '.wrap_date($event['dauer']);
 	$page['breadcrumbs'][] = '<a href="../../">'.$event['jahr'].'</a>';
+	$page['title'] = $data['event'].', '.wrap_date($event['duration']);
 	$page['breadcrumbs'][] = '<a href="../">'.$data['event'].'</a>';
 	$page['breadcrumbs'][] = 'Urkunden';
 	$page['dont_show_h1'] = true;
