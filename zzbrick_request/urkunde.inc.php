@@ -28,7 +28,7 @@ function mod_certificates_urkunde($params) {
 
 	// Turnier
 	// @todo ggf. Urkundenstandardtext überschreibbar machen
-	$sql = 'SELECT event_id, event, runden, YEAR(events.date_begin) AS jahr
+	$sql = 'SELECT event_id, event, runden, YEAR(events.date_begin) AS year
 			, urkunde_ort, urkunde_datum
 			, urkunde_unterschrift1, urkunde_unterschrift2
 			, certificates.identifier AS urkunde_kennung
@@ -121,8 +121,8 @@ function mod_certificates_urkunde($params) {
 			$turnier['obertitel'] .= $turnier['turnierzahl'].'. ';
 			$turnier['obertitel_dativ'] .= $turnier['turnierzahl'].'. ';
 		} else {
-			$turnier['titel'] .= ' '.$turnier['jahr'];
-			$turnier['titel_dativ'] .= ' '.$turnier['jahr'];
+			$turnier['titel'] .= ' '.$turnier['year'];
+			$turnier['titel_dativ'] .= ' '.$turnier['year'];
 		}
 		if ($turnier['offen']) {
 			if ($turnier['series_path'] === 'kika')
@@ -155,17 +155,17 @@ function mod_certificates_urkunde($params) {
 		} else {
 			$turnier['untertitel'] = 'Altersklasse '.array_pop($turnier['titel']);
 		}
-		$turnier['titel'] = implode(' ', $turnier['titel']).' '.$turnier['jahr'];
+		$turnier['titel'] = implode(' ', $turnier['titel']).' '.$turnier['year'];
 		$turnier['titel_dativ'] = str_replace('Deutsche', 'Deutschen', $turnier['titel']);
 		break;
 	case 'dlm':
 		$turnier['vereinsprefix'] = 'mit ';
-		$turnier['titel'] = $turnier['series'].' '.$turnier['jahr'];
+		$turnier['titel'] = $turnier['series'].' '.$turnier['year'];
 		$turnier['obertitel'] = '';
 		$turnier['untertitel'] = '';
 		break;
 	default:
-		$turnier['titel'] = $turnier['series'].' '.$turnier['jahr'];
+		$turnier['titel'] = $turnier['series'].' '.$turnier['year'];
 		$turnier['obertitel'] = '';
 		$turnier['untertitel'] = '';
 		break;
@@ -258,7 +258,7 @@ function mod_certificates_urkunde($params) {
 		unlink($folder.'/urkunde-'.$type.'.pdf');
 	}
 	$file['name'] = $folder.'/urkunde-'.$type.'.pdf';
-	$file['send_as'] = $turnier['jahr'].' '.$turnier['series_short'].' Urkunden '.ucfirst($type).'.pdf';
+	$file['send_as'] = $turnier['year'].' '.$turnier['series_short'].' Urkunden '.ucfirst($type).'.pdf';
 	$file['etag_generate_md5'] = true;
 
 	$pdf->output($file['name']);
