@@ -98,7 +98,7 @@ function mod_certificates_urkunde($params) {
 	} else {
 		$order_by_limit = 'ORDER BY t_nachname, t_vorname, person_id';
 	}
-	$filter = my_tabellenstand_filter($filter_kennung);
+	$filter = mf_tournaments_standings_filter($filter_kennung);
 	if ($filter['error']) return false;
 	$where = array_merge($where, $filter['where']);
 
