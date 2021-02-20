@@ -29,8 +29,8 @@ function mod_certificates_urkunde($params) {
 	// Turnier
 	// @todo ggf. Urkundenstandardtext überschreibbar machen
 	$sql = 'SELECT event_id, event, runden, YEAR(events.date_begin) AS year
-			, urkunde_ort, urkunde_datum
-			, urkunde_unterschrift1, urkunde_unterschrift2
+			, place, date_of_certificate
+			, signature_left, signature_right
 			, certificates.identifier AS urkunde_kennung
 			, SUBSTRING_INDEX(series.path, "/", -1) AS series_path
 			, SUBSTRING_INDEX(SUBSTRING(series.path FROM 8), "/", 1) AS main_series
@@ -42,40 +42,41 @@ function mod_certificates_urkunde($params) {
 			, IF(events.offen = "ja", 1 , NULL) AS offen
 			, SUBSTRING_INDEX(event_categories.path, "/", -1) AS event_category
 		FROM events
+		LEFT JOIN events_certificates USING (event_id)
+		LEFT JOIN certificates USING (certificate_id)
 		LEFT JOIN turniere USING (event_id)
 		LEFT JOIN categories series
 			ON events.series_category_id = series.category_id
 		LEFT JOIN categories event_categories
 			ON events.event_category_id = event_categories.category_id
-		LEFT JOIN certificates USING (certificate_id)
 		WHERE events.identifier = "%d/%s"';
 	$sql = sprintf($sql, $params[0], wrap_db_escape($params[1]));
-	$turnier = wrap_db_fetch($sql);
-	if (!$turnier) return false;
-	if (empty($turnier['urkunde_kennung'])) {
+	$event = wrap_db_fetch($sql);
+	if (!$event) return false;
+	if (empty($event['urkunde_kennung'])) {
 		$page['url_ending'] = 'none';
 		$page['text'] = '<p class="error">Bitte wähle erst in den <a href="../turnier/">Turniereinstellungen</a> eine Urkunde aus!</p>';
 		return $page;
 	}
 
-	if ($turnier['urkunde_parameter']) {
-		parse_str($turnier['urkunde_parameter'], $parameter);
-		unset($turnier['urkunde_parameter']);
-		$turnier = array_merge($parameter, $turnier);
+	if ($event['urkunde_parameter']) {
+		parse_str($event['urkunde_parameter'], $parameter);
+		unset($event['urkunde_parameter']);
+		$event = array_merge($parameter, $event);
 	}
-	if (!isset($turnier['platzurkunden'])) {
-		$turnier['platzurkunden'] = wrap_get_setting('platzurkunden');
+	if (!isset($event['platzurkunden'])) {
+		$event['platzurkunden'] = wrap_get_setting('platzurkunden');
 	}
-	$turnier['urkundentext'] = 'hat mit Erfolg teilgenommen';
-	if (!isset($turnier['turnierzahl'])) {
-		$turnier['turnierzahl'] = false;
+	$event['urkundentext'] = 'hat mit Erfolg teilgenommen';
+	if (!isset($event['turnierzahl'])) {
+		$event['turnierzahl'] = false;
 	}
-	$turnier['urkunde_datum'] = datum_de_lang($turnier['urkunde_datum']);
+	$event['date_of_certificate'] = datum_de_lang($event['date_of_certificate']);
 
 	// Urkundentyp
 	$type = substr($params[2], 0, -4);
 	$possible_types = ['teilnahme', 'spezial', 'platz'];
-	$tabellenstaende = explode(',', $turnier['tabellenstaende']);
+	$tabellenstaende = explode(',', $event['tabellenstaende']);
 	foreach ($tabellenstaende as $tabellenstand) {
 		if (!$tabellenstand) continue;
 		$possible_types[] = 'platz-'.$tabellenstand;
@@ -87,14 +88,14 @@ function mod_certificates_urkunde($params) {
 		$where[] = 'NOT ISNULL(urkundentext)';
 	} elseif (substr($type, 0, 6) === 'platz-') {
 		$filter_kennung = substr($type, 6);
-		if (isset($turnier['platzurkunden_'.$filter_kennung])) {
-			$turnier['platzurkunden'] = $turnier['platzurkunden_'.$filter_kennung];
+		if (isset($event['platzurkunden_'.$filter_kennung])) {
+			$event['platzurkunden'] = $event['platzurkunden_'.$filter_kennung];
 		}
-		if ($filter_kennung === 'w') $turnier['weiblich'] = true;
+		if ($filter_kennung === 'w') $event['weiblich'] = true;
 		$type = 'platz';
 	}
 	if ($type === 'platz') {
-		$order_by_limit = sprintf('ORDER BY platz_no, t_nachname, t_vorname LIMIT %d ', $turnier['platzurkunden']);
+		$order_by_limit = sprintf('ORDER BY platz_no, t_nachname, t_vorname LIMIT %d ', $event['platzurkunden']);
 	} else {
 		$order_by_limit = 'ORDER BY t_nachname, t_vorname, person_id';
 	}
@@ -103,76 +104,76 @@ function mod_certificates_urkunde($params) {
 	$where = array_merge($where, $filter['where']);
 
 	// Titel des Turniers
-	$turnier['obertitel'] = '';
-	$turnier['obertitel_dativ'] = '';
-	$turnier['vereinsprefix'] = '';
-	switch ($turnier['main_series']) {
+	$event['obertitel'] = '';
+	$event['obertitel_dativ'] = '';
+	$event['vereinsprefix'] = '';
+	switch ($event['main_series']) {
 	case 'dem':
-		$turnier['titel'] = 'Deutsche Einzelmeisterschaft';
-		$turnier['titel_dativ'] = 'Deutschen Einzelmeisterschaft';
-		if (substr($turnier['series_path'], 0, 4) === 'odjm') {
-			$turnier['titel'] = 'Deutsche Juniorenmeisterschaft';
-			$turnier['titel_dativ'] = 'Deutschen Juniorenmeisterschaft';
-		} elseif ($turnier['series_path'] === 'kika') {
-			$turnier['titel'] = 'Kinderschachturnier der DSJ';
-			$turnier['titel_dativ'] = 'Kinderschachturniers der DSJ';
+		$event['titel'] = 'Deutsche Einzelmeisterschaft';
+		$event['titel_dativ'] = 'Deutschen Einzelmeisterschaft';
+		if (substr($event['series_path'], 0, 4) === 'odjm') {
+			$event['titel'] = 'Deutsche Juniorenmeisterschaft';
+			$event['titel_dativ'] = 'Deutschen Juniorenmeisterschaft';
+		} elseif ($event['series_path'] === 'kika') {
+			$event['titel'] = 'Kinderschachturnier der DSJ';
+			$event['titel_dativ'] = 'Kinderschachturniers der DSJ';
 		}
-		if ($turnier['turnierzahl']) {
-			$turnier['obertitel'] .= $turnier['turnierzahl'].'. ';
-			$turnier['obertitel_dativ'] .= $turnier['turnierzahl'].'. ';
+		if ($event['turnierzahl']) {
+			$event['obertitel'] .= $event['turnierzahl'].'. ';
+			$event['obertitel_dativ'] .= $event['turnierzahl'].'. ';
 		} else {
-			$turnier['titel'] .= ' '.$turnier['year'];
-			$turnier['titel_dativ'] .= ' '.$turnier['year'];
+			$event['titel'] .= ' '.$event['year'];
+			$event['titel_dativ'] .= ' '.$event['year'];
 		}
-		if ($turnier['offen']) {
-			if ($turnier['series_path'] === 'kika')
-				$turnier['obertitel'] .= 'Offenes ';
+		if ($event['offen']) {
+			if ($event['series_path'] === 'kika')
+				$event['obertitel'] .= 'Offenes ';
 			else
-				$turnier['obertitel'] .= 'Offene ';
-			$turnier['obertitel_dativ'] .= 'Offenen ';
+				$event['obertitel'] .= 'Offene ';
+			$event['obertitel_dativ'] .= 'Offenen ';
 		}
-		if ($turnier['weiblich']) {
-			$turnier['untertitel'] = 'der Altersklasse unter '.$turnier['alter_max'].' Jahren weiblich';
-		} elseif ($turnier['series_path'] == 'odjm-a') {
-			$turnier['untertitel'] = 'A-Turnier';
-		} elseif ($turnier['series_path'] == 'odjm-b') {
-			$turnier['untertitel'] = 'B-Turnier';
-		} elseif ($turnier['series_path'] == 'odjm-c') {
-			$turnier['untertitel'] = 'C-Turnier';
+		if ($event['weiblich']) {
+			$event['untertitel'] = 'der Altersklasse unter '.$event['alter_max'].' Jahren weiblich';
+		} elseif ($event['series_path'] == 'odjm-a') {
+			$event['untertitel'] = 'A-Turnier';
+		} elseif ($event['series_path'] == 'odjm-b') {
+			$event['untertitel'] = 'B-Turnier';
+		} elseif ($event['series_path'] == 'odjm-c') {
+			$event['untertitel'] = 'C-Turnier';
 		} else {
-			$turnier['untertitel'] = 'der Altersklasse unter '.$turnier['alter_max'].' Jahren';
-			if ($turnier['series_path'] == 'odem-u25-a') $turnier['untertitel'] .= ' (A-Turnier)';
-			elseif ($turnier['series_path'] == 'odem-u25-b') $turnier['untertitel'] .= ' (B-Turnier)';
+			$event['untertitel'] = 'der Altersklasse unter '.$event['alter_max'].' Jahren';
+			if ($event['series_path'] == 'odem-u25-a') $event['untertitel'] .= ' (A-Turnier)';
+			elseif ($event['series_path'] == 'odem-u25-b') $event['untertitel'] .= ' (B-Turnier)';
 		}
 		break;
 	case 'dsm':
 	case 'dvm':
-		$turnier['vereinsprefix'] = 'mit ';
-		$turnier['titel'] = explode(' ', $turnier['series']);
-		if ($turnier['main_series'] === 'dsm') {
-			$turnier['untertitel'] = 'Wettkampfklasse '.array_pop($turnier['titel']);
-			array_pop($turnier['titel']);
+		$event['vereinsprefix'] = 'mit ';
+		$event['titel'] = explode(' ', $event['series']);
+		if ($event['main_series'] === 'dsm') {
+			$event['untertitel'] = 'Wettkampfklasse '.array_pop($event['titel']);
+			array_pop($event['titel']);
 		} else {
-			$turnier['untertitel'] = 'Altersklasse '.array_pop($turnier['titel']);
+			$event['untertitel'] = 'Altersklasse '.array_pop($event['titel']);
 		}
-		$turnier['titel'] = implode(' ', $turnier['titel']).' '.$turnier['year'];
-		$turnier['titel_dativ'] = str_replace('Deutsche', 'Deutschen', $turnier['titel']);
+		$event['titel'] = implode(' ', $event['titel']).' '.$event['year'];
+		$event['titel_dativ'] = str_replace('Deutsche', 'Deutschen', $event['titel']);
 		break;
 	case 'dlm':
-		$turnier['vereinsprefix'] = 'mit ';
-		$turnier['titel'] = $turnier['series'].' '.$turnier['year'];
-		$turnier['obertitel'] = '';
-		$turnier['untertitel'] = '';
+		$event['vereinsprefix'] = 'mit ';
+		$event['titel'] = $event['series'].' '.$event['year'];
+		$event['obertitel'] = '';
+		$event['untertitel'] = '';
 		break;
 	default:
-		$turnier['titel'] = $turnier['series'].' '.$turnier['year'];
-		$turnier['obertitel'] = '';
-		$turnier['untertitel'] = '';
+		$event['titel'] = $event['series'].' '.$event['year'];
+		$event['obertitel'] = '';
+		$event['untertitel'] = '';
 		break;
 	}
 
 	// Teams?
-	if ($turnier['event_category'] === 'mannschaft') {
+	if ($event['event_category'] === 'mannschaft') {
 		$sql = 'SELECT teams.team_id
 				, CONCAT(team, IFNULL(CONCAT(" ", team_no), "")) AS spieler
 				, (SELECT
@@ -188,7 +189,7 @@ function mod_certificates_urkunde($params) {
 				AND tabellenstaende.runde_no = %d
 			WHERE teams.event_id = %d
 			ORDER BY platz_no, team, team_no';
-		$sql = sprintf($sql, $turnier['runden'], $turnier['event_id']);
+		$sql = sprintf($sql, $event['runden'], $event['event_id']);
 		$data = wrap_db_fetch($sql, 'team_id');
 		// @todo $where
 		// @todo ORDER BY
@@ -212,8 +213,8 @@ function mod_certificates_urkunde($params) {
 			%s
 			%s
 		';
-		$sql = sprintf($sql, $turnier['runden']
-			, $turnier['event_id']
+		$sql = sprintf($sql, $event['runden']
+			, $event['event_id']
 			, wrap_id('usergroups', 'spieler')
 			, $where ? ' AND '.implode(' AND ', $where) : ''
 			, $order_by_limit
@@ -221,10 +222,10 @@ function mod_certificates_urkunde($params) {
 		$data = wrap_db_fetch($sql, 'person_id');
 	}
 	foreach ($data as $id => $line) {
-		$data[$id]['verein'] = $turnier['vereinsprefix'].$line['verein'];
+		$data[$id]['verein'] = $event['vereinsprefix'].$line['verein'];
 		switch ($type) {
 		case 'teilnahme':
-			$data[$id]['textzeile'] = $turnier['urkundentext'];
+			$data[$id]['textzeile'] = $event['urkundentext'];
 			break;
 		case 'spezial':
 			$data[$id]['textzeile'] = $line['urkundentext'];
@@ -232,7 +233,7 @@ function mod_certificates_urkunde($params) {
 		} 
 	}
 
-	if ($turnier['event_category'] === 'einzel') {
+	if ($event['event_category'] === 'einzel') {
 		$i = 1;
 		foreach ($data as $person_id => $person) {
 			if (function_exists('my_verein_saeubern')) {
@@ -249,16 +250,16 @@ function mod_certificates_urkunde($params) {
 
 	$vorlagen = $zz_setting['media_folder'].'/urkunden-grafiken';
 	require_once $zz_setting['modules_dir'].'/default/libraries/tfpdf.inc.php';
-	require_once __DIR__.'/urkunden/'.$turnier['urkunde_kennung'].'.inc.php';
-	$pdf = cms_urkunde_out($turnier, $data, $vorlagen, $type);
+	require_once __DIR__.'/urkunden/'.$event['urkunde_kennung'].'.inc.php';
+	$pdf = cms_urkunde_out($event, $data, $vorlagen, $type);
 
-	$folder = $zz_setting['cache_dir'].'/urkunden/'.$turnier['identifier'];
+	$folder = $zz_setting['cache_dir'].'/urkunden/'.$event['identifier'];
 	wrap_mkdir($folder);
 	if (file_exists($folder.'/urkunde-'.$type.'.pdf')) {
 		unlink($folder.'/urkunde-'.$type.'.pdf');
 	}
 	$file['name'] = $folder.'/urkunde-'.$type.'.pdf';
-	$file['send_as'] = $turnier['year'].' '.$turnier['series_short'].' Urkunden '.ucfirst($type).'.pdf';
+	$file['send_as'] = $event['year'].' '.$event['series_short'].' Urkunden '.ucfirst($type).'.pdf';
 	$file['etag_generate_md5'] = true;
 
 	$pdf->output($file['name']);

@@ -80,9 +80,9 @@ function cms_urkunde_out($turnier, $data, $vorlagen, $type) {
 	// Fuß
 		$pdf->setFont('eraslight', '', 14);
 		$pdf->SetXY(0, 680);
-		$pdf->Cell(0, 14, $turnier['urkunde_ort'].', '.$turnier['urkunde_datum'], 0, 0, 'C'); 
-		$pdf->text(175, 795, $turnier['urkunde_unterschrift1']); 
-		$pdf->text(360, 795, $turnier['urkunde_unterschrift2']); 
+		$pdf->Cell(0, 14, $turnier['place'].', '.$turnier['date_of_certificate'], 0, 0, 'C'); 
+		$pdf->text(175, 795, $turnier['signature_left']); 
+		$pdf->text(360, 795, $turnier['signature_right']); 
 	}
 	return $pdf;
 }

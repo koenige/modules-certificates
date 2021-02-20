@@ -85,9 +85,9 @@ function cms_urkunde_out($turnier, $data, $vorlagen, $type) {
 		$pdf->image($vorlagen.'/duesseldorfer-laeufer.png', 470, 730, 64, 72);
 		$pdf->SetXY(0, 730);
 		$pdf->setFont('lylas', '', 14);
-		$pdf->Cell(0, 14, $turnier['urkunde_ort'].', '.$turnier['urkunde_datum'], 0, 0, 'C'); 
-		$pdf->text(170, 800, $turnier['urkunde_unterschrift1']); 
-		$pdf->text(340, 800, $turnier['urkunde_unterschrift2']);
+		$pdf->Cell(0, 14, $turnier['place'].', '.$turnier['date_of_certificate'], 0, 0, 'C'); 
+		$pdf->text(170, 800, $turnier['signature_left']); 
+		$pdf->text(340, 800, $turnier['signature_right']);
 	}
 	return $pdf;
 }

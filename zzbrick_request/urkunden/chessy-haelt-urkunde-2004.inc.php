@@ -94,10 +94,10 @@ function cms_urkunde_out($turnier, $data, $vorlagen, $type) {
 	// Fuß		
 		$pdf->setFont('eraslight', '', 11);
 		$pdf->SetXY(295, 630);
-		$pdf->Cell(185, 15, $turnier['urkunde_ort'].', '.$turnier['urkunde_datum'], 0, 2, 'C'); 
+		$pdf->Cell(185, 15, $turnier['place'].', '.$turnier['date_of_certificate'], 0, 2, 'C'); 
 		$pdf->SetXY(295, 690);
-		$pdf->Cell(90, 15, $turnier['urkunde_unterschrift1'], 0, 0, 'C'); 
-		$pdf->Cell(90, 15, $turnier['urkunde_unterschrift2'], 0, 2, 'C');
+		$pdf->Cell(90, 15, $turnier['signature_left'], 0, 0, 'C'); 
+		$pdf->Cell(90, 15, $turnier['signature_right'], 0, 2, 'C');
 	}
 	return $pdf;
 }
