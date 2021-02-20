@@ -13,6 +13,7 @@
  *		[1]: Turnierkennung
  *		[2]: (optional) 'urkunden'
  *		[3]: Typ 'teilnahme.pdf', 'spezial.pdf', 'platz.pdf', 'platz-w.pdf' etc.
+ *				or 'bearbeiten'
  * @return array $page
  */
 function mod_certificates_urkunde($params) {
@@ -20,10 +21,11 @@ function mod_certificates_urkunde($params) {
 	global $zz_setting;
 	
 	if (count($params) === 4 AND $params[2] === 'urkunden') {
-		unset ($params[2]);
+		unset($params[2]);
 	}
 	if (count($params) !== 3) return false;
 	$params = array_values($params);
+	if ($params[2] === 'bearbeiten') return brick_format('%%% forms events-certificates '.$params[0].' '.$params[1].' %%%');
 	if (substr($params[2], -4) !== '.pdf') return false;
 
 	// Turnier
@@ -55,7 +57,10 @@ function mod_certificates_urkunde($params) {
 	if (!$event) return false;
 	if (empty($event['urkunde_kennung'])) {
 		$page['url_ending'] = 'none';
-		$page['text'] = '<p class="error">Bitte wähle erst in den <a href="../turnier/">Turniereinstellungen</a> eine Urkunde aus!</p>';
+		$page['title'] = $event['event'].' '.$event['year'];
+		$page['breadcrumbs'][] = '<a href="../">'.$event['event'].' '.$event['year'].'</a>';
+		$page['breadcrumbs'][] = 'Urkunde';
+		$page['text'] = '<p class="error">Bitte wähle erst in den <a href="../bearbeiten/">eine Urkunde aus!</a></p>';
 		return $page;
 	}
 

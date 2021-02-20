@@ -1,8 +1,16 @@
 <?php
 
-// deutsche-schachjugend.de / dem2012.de
-// Copyright (c) 2008, 2012, 2014-2020 Gustaf Mossakowski <gustaf@koenige.org>
-// Übersicht Urkunden
+/**
+ * certificates module
+ * Overview of certificates
+ *
+ * Part of »Zugzwang Project«
+ * http://www.zugzwang.org/modules/certificates
+ *
+ * @author Gustaf Mossakowski <gustaf@koenige.org>
+ * @copyright Copyright © 2008, 2012, 2014-2020 Gustaf Mossakowski
+ * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
+ */
 
 
 function mod_certificates_urkunden($params) {

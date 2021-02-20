@@ -1,6 +1,12 @@
-# deutsche-schachjugend.de / dem2012.de
-# Copyright (c) 2012, 2014, 2016-2017, 2020 Gustaf Mossakowski <gustaf@koenige.org>
-# HTML-Ausgabe: Urkunden
+# certificates module
+# HTML output: overview, select and print certificates
+#
+# Part of »Zugzwang Project«
+# https://www.zugzwang.org/modules/certificates
+#
+# @author Gustaf Mossakowski <gustaf@koenige.org>
+# @copyright Copyright © 2012, 2014, 2016-2017, 2020-2021 Gustaf Mossakowski
+# @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
 #
 <h1>Urkunden
 <br><a href="../">%%% item event %%% %%% item duration wrap_date %%%</a></h1>
@@ -18,6 +24,7 @@
 %%% condition if spezialurkunden %%%
  | <a href="../../../%%% item identifier %%%/urkunden/spezial.pdf">%%% item event %%% Spezial</a>
 %%% condition endif %%%
+&nbsp;– &nbsp;<a href="../../../%%% item identifier %%%/urkunden/bearbeiten/">Urkunde auswählen und beschriften</a>
 </li>
 %%% loop end %%%
 </ul>
