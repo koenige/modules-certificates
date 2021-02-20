@@ -1,18 +1,26 @@
 <?php 
 
-// dem2012.de
-// Copyright (c) 2008, 2012, 2014, 2019-2020 Gustaf Mossakowski, <gustaf@koenige.org>
-// Eingabeskript Urkunden
+/**
+ * certificates module
+ * Table definition for 'certificates'
+ *
+ * Part of »Zugzwang Project«
+ * http://www.zugzwang.org/modules/certificates
+ *
+ * @author Gustaf Mossakowski <gustaf@koenige.org>
+ * @copyright Copyright © 2008, 2012, 2014, 2019-2021 Gustaf Mossakowski
+ * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
+ */
 
 
-$zz['title'] = 'Urkunden';
+$zz['title'] = 'Certificates';
 $zz['table'] = 'certificates';
 
 $zz['fields'][1]['title'] = 'ID';
 $zz['fields'][1]['field_name'] = 'certificate_id';
 $zz['fields'][1]['type'] = 'id';
 
-$zz['fields'][15]['title'] = 'Bild';
+$zz['fields'][15]['title'] = 'Preview';
 $zz['fields'][15]['field_name'] = 'bild';
 $zz['fields'][15]['type'] = 'upload_image';
 $zz['fields'][15]['path'] = [
@@ -30,7 +38,7 @@ $zz['fields'][15]['image'][0]['height'] = 421;
 $zz['fields'][15]['image'][0]['action'] = 'thumbnail';
 $zz['fields'][15]['image'][0]['path'] = $zz['fields'][15]['path'];
 
-$zz['fields'][2]['title'] = 'Titel der Urkunde';
+$zz['fields'][2]['title'] = 'Certificate';
 $zz['fields'][2]['field_name'] = 'certificate';
 
 $zz['fields'][3]['field_name'] = 'identifier';

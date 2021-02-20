@@ -1,0 +1,47 @@
+# certificates module
+# Translations to German
+#
+# Part of »Zugzwang Project«
+# https://www.zugzwang.org/modules/certificates
+#
+# @author Gustaf Mossakowski <gustaf@koenige.org>
+# @copyright Copyright © 2021 Gustaf Mossakowski
+# @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Zugzwang Project -- certificates module\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Gustaf Mossakowski <gustaf@koenige.org>\n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.12\n"
+
+#: zzbrick_tables/certificates.php
+msgid "Certificates"
+msgstr "Urkunden"
+
+#: zzbrick_tables/certificates.php
+msgid "Certificate"
+msgstr "Urkunde"
+
+#: zzbrick_tables/events-certificates.php
+msgid "Certificates for an event"
+msgstr "Urkunden für eine Veranstaltung"
+
+#: zzbrick_tables/events-certificates.php
+msgid "Date of certificate"
+msgstr "Datum der Urkunde"
+
+#: zzbrick_tables/events-certificates.php
+msgid "Signature, left"
+msgstr "Unterschrift links"
+
+#: zzbrick_tables/events-certificates.php
+msgid "Signature, right"
+msgstr "Unterschrift rechts"
