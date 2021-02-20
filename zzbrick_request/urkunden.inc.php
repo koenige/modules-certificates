@@ -23,10 +23,10 @@ function mod_certificates_urkunden($params) {
 				WHERE NOT ISNULL(urkundentext)
 				AND event_id = events.event_id) AS spezialurkunden
 			, IFNULL(place, places.contact) AS turnierort
-			, turniere.tabellenstaende
+			, tournaments.tabellenstaende
 			, IF(main_series.category = "Reihen", series.category, main_series.category) AS series
 		FROM events
-		LEFT JOIN turniere USING (event_id)
+		LEFT JOIN tournaments USING (event_id)
 		JOIN teilnahmen
 			ON teilnahmen.event_id = events.event_id
 			AND teilnahmen.usergroup_id = %d

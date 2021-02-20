@@ -40,13 +40,13 @@ function mod_certificates_urkunde($params) {
 			, series.category_short AS series_short
 			, events.identifier
 			, tabellenstaende, urkunde_parameter, alter_max
-			, IF(turniere.geschlecht = "w", 1, NULL) AS weiblich
+			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
 			, IF(events.offen = "ja", 1 , NULL) AS offen
 			, SUBSTRING_INDEX(event_categories.path, "/", -1) AS event_category
 		FROM events
 		LEFT JOIN events_certificates USING (event_id)
 		LEFT JOIN certificates USING (certificate_id)
-		LEFT JOIN turniere USING (event_id)
+		LEFT JOIN tournaments USING (event_id)
 		LEFT JOIN categories series
 			ON events.series_category_id = series.category_id
 		LEFT JOIN categories event_categories
