@@ -1,8 +1,16 @@
 <?php 
 
-// deutsche-schachjugend.de, dem2012.de
-// Copyright (c) 2008, 2012, 2014-2020 Gustaf Mossakowski <gustaf@koenige.org>
-// Urkundendruck in PDF
+/**
+ * certificates module
+ * create PDF for certificates for print
+ *
+ * Part of »Zugzwang Project«
+ * http://www.zugzwang.org/modules/certificates
+ *
+ * @author Gustaf Mossakowski <gustaf@koenige.org>
+ * @copyright Copyright © 2008, 2012, 2014-2021 Gustaf Mossakowski
+ * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
+ */
 
 
 /**
@@ -30,7 +38,7 @@ function mod_certificates_urkunde($params) {
 
 	// Turnier
 	// @todo ggf. Urkundenstandardtext überschreibbar machen
-	$sql = 'SELECT event_id, event, runden, YEAR(events.date_begin) AS year
+	$sql = 'SELECT event_id, event, runden, IFNULL(events.event_year, YEAR(events.date_begin)) AS year
 			, place, date_of_certificate
 			, signature_left, signature_right
 			, certificates.identifier AS urkunde_kennung

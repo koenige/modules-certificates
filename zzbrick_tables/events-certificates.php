@@ -28,7 +28,7 @@ $zz['fields'][2]['sql'] = 'SELECT event_id, date_begin, event
 	WHERE ISNULL(main_event_id)
 	ORDER BY event';
 $zz['fields'][2]['display_field'] = 'event';
-$zz['fields'][2]['search'] = 'CONCAT(events.event, " ", YEAR(date_begin))';
+$zz['fields'][2]['search'] = 'CONCAT(events.event, " ", IFNULL(event_year, YEAR(date_begin)))';
 $zz['fields'][2]['unique'] = true;
 $zz['fields'][2]['if']['where']['hide_in_form'] = true;
 $zz['fields'][2]['link'] = [
@@ -65,7 +65,7 @@ $zz['fields'][7]['hide_in_list'] = true;
 
 
 $zz['sql'] = 'SELECT events_certificates.*
-		, CONCAT(events.event, " ", YEAR(date_begin)) AS event
+		, CONCAT(events.event, " ", IFNULL(event_year, YEAR(date_begin))) AS event
 		, events.identifier AS event_identifier
 		, certificates.certificate
 	FROM events_certificates

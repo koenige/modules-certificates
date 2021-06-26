@@ -8,7 +8,7 @@
  * http://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014-2020 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014-2021 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -17,7 +17,7 @@ function mod_certificates_urkunden($params) {
 	if (count($params) !== 2) return false;
 	
 	$sql = 'SELECT events.event_id, events.identifier, events.event
-			, YEAR(events.date_begin) AS year
+			, IFNULL(events.event_year, YEAR(events.date_begin)) AS year
 			, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS duration
 			, (SELECT COUNT(teilnahme_id) FROM teilnahmen
 				WHERE NOT ISNULL(urkundentext)
@@ -39,7 +39,7 @@ function mod_certificates_urkunden($params) {
 		LEFT JOIN addresses
 			ON events.place_contact_id = addresses.contact_id
 		WHERE (main_series.path = "reihen/%s" OR events.identifier = "%d/%s")
-		AND YEAR (events.date_begin) = %d
+		AND IFNULL(events.event_year, YEAR(events.date_begin)) = %d
 		ORDER BY series.sequence, events.date_begin, events.identifier
 	';
 	$sql = sprintf($sql
@@ -50,7 +50,7 @@ function mod_certificates_urkunden($params) {
 	$data = wrap_db_fetch($sql, 'event_id');
 	if (!$data) {
 		$sql = 'SELECT events.event_id, events.identifier, events.event
-				, YEAR(events.date_begin) AS year
+				, IFNULL(events.event_year, YEAR(events.date_begin)) AS year
 				, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS duration
 				, IFNULL(place, places.contact) AS turnierort
 			FROM events
