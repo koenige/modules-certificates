@@ -266,7 +266,7 @@ function mod_certificates_urkunde($params) {
 	require_once __DIR__.'/urkunden/'.$event['urkunde_kennung'].'.inc.php';
 	$pdf = cms_urkunde_out($event, $data, $vorlagen, $type);
 
-	$folder = $zz_setting['cache_dir'].'/urkunden/'.$event['identifier'];
+	$folder = $zz_setting['tmp_dir'].'/urkunden/'.$event['identifier'];
 	wrap_mkdir($folder);
 	if (file_exists($folder.'/urkunde-'.$type.'.pdf')) {
 		unlink($folder.'/urkunde-'.$type.'.pdf');
