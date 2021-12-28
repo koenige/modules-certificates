@@ -3,7 +3,6 @@
 function cms_urkunde_out($turnier, $data, $vorlagen, $type) {
 
 	$pdf = new TFPDF('P', 'pt', 'A4');		// panorama = p, DIN A4, 595 x 842
-	$pdf->open();
 	$pdf->setCompression(true);
 
 	$pdf->AddFont('lylas', '', 'LoveYaLikeASister.ttf', true);

@@ -275,7 +275,7 @@ function mod_certificates_urkunde($params) {
 	$file['send_as'] = $event['year'].' '.$event['series_short'].' Urkunden '.ucfirst($type).'.pdf';
 	$file['etag_generate_md5'] = true;
 
-	$pdf->output($file['name']);
+	$pdf->output('F', $file['name'], true);
 	wrap_file_send($file);
 	exit;
 }

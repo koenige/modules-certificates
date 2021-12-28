@@ -8,7 +8,6 @@
 function cms_urkunde_out($turnier, $data, $vorlagen, $type) {
 
 	$pdf = new TFPDF('P', 'pt', 'A4');		// panorama = p, DIN A4, 595 x 842
-	$pdf->open();
 	$pdf->setCompression(true);
 	$pdf->AddFont('eraslight', '', 'ERASLGHT.TTF', true);
 	$pdf->AddFont('ErasITC-Bold', '', 'ERASBD.TTF', true);
