@@ -5,10 +5,10 @@
  * create PDF for certificates for print
  *
  * Part of »Zugzwang Project«
- * http://www.zugzwang.org/modules/certificates
+ * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014-2021 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014-2022 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -68,7 +68,7 @@ function mod_certificates_urkunde($params) {
 		$page['title'] = $event['event'].' '.$event['year'];
 		$page['breadcrumbs'][] = '<a href="../">'.$event['event'].' '.$event['year'].'</a>';
 		$page['breadcrumbs'][] = 'Urkunde';
-		$page['text'] = '<p class="error">Bitte wähle erst in den <a href="../bearbeiten/">eine Urkunde aus!</a></p>';
+		$page['text'] = '<p class="error">Bitte wähle erst <a href="./bearbeiten/">eine Urkunde aus!</a></p>';
 		return $page;
 	}
 
@@ -89,10 +89,12 @@ function mod_certificates_urkunde($params) {
 	// Urkundentyp
 	$type = substr($params[2], 0, -4);
 	$possible_types = ['teilnahme', 'spezial', 'platz'];
-	$tabellenstaende = explode(',', $event['tabellenstaende']);
-	foreach ($tabellenstaende as $tabellenstand) {
-		if (!$tabellenstand) continue;
-		$possible_types[] = 'platz-'.$tabellenstand;
+	if ($event['tabellenstaende']) {
+		$tabellenstaende = explode(',', $event['tabellenstaende']);
+		foreach ($tabellenstaende as $tabellenstand) {
+			if (!$tabellenstand) continue;
+			$possible_types[] = 'platz-'.$tabellenstand;
+		}
 	}
 	if (!in_array($type, $possible_types)) return false;
 	$where = [];

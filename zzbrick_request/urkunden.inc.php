@@ -5,10 +5,10 @@
  * Overview of certificates
  *
  * Part of »Zugzwang Project«
- * http://www.zugzwang.org/modules/certificates
+ * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014-2021 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014-2022 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -67,12 +67,14 @@ function mod_certificates_urkunden($params) {
 		$event['year'] = $data['year'];
 	} else {
 		foreach ($data as $event_id => $turnier) {
-			$tabellenstaende = explode(',', $turnier['tabellenstaende']);
 			$data[$event_id]['platz'][] = ['bereich' => ''];
-			if ($tabellenstaende) {
-				foreach ($tabellenstaende as $tabellenstand) {
-					if (!$tabellenstand) continue;
-					$data[$event_id]['platz'][] = ['bereich' => $tabellenstand];
+			if ($turnier['tabellenstaende']) {
+				$tabellenstaende = explode(',', $turnier['tabellenstaende']);
+				if ($tabellenstaende) {
+					foreach ($tabellenstaende as $tabellenstand) {
+						if (!$tabellenstand) continue;
+						$data[$event_id]['platz'][] = ['bereich' => $tabellenstand];
+					}
 				}
 			}
 		}
