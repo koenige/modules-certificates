@@ -218,7 +218,7 @@ function mod_certificates_urkunde($params) {
 				, urkundentext
 				, tabellenstaende.platz_no
 			FROM teilnahmen
-			LEFT JOIN personen USING (person_id)
+			LEFT JOIN persons USING (person_id)
 			LEFT JOIN tabellenstaende
 				ON tabellenstaende.person_id = teilnahmen.person_id
 				AND tabellenstaende.event_id = teilnahmen.event_id
