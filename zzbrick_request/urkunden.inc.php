@@ -19,7 +19,7 @@ function mod_certificates_urkunden($params) {
 	$sql = 'SELECT events.event_id, events.identifier, events.event
 			, IFNULL(events.event_year, YEAR(events.date_begin)) AS year
 			, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS duration
-			, (SELECT COUNT(teilnahme_id) FROM teilnahmen
+			, (SELECT COUNT(*) FROM teilnahmen
 				WHERE NOT ISNULL(urkundentext)
 				AND event_id = events.event_id) AS spezialurkunden
 			, IFNULL(place, places.contact) AS turnierort
