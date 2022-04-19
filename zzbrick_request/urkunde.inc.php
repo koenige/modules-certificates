@@ -193,8 +193,8 @@ function mod_certificates_urkunde($params) {
 				, CONCAT(team, IFNULL(CONCAT(" ", team_no), "")) AS spieler
 				, (SELECT
 					GROUP_CONCAT(CONCAT(t_vorname, " ", IFNULL(CONCAT(t_namenszusatz, " "), ""), t_nachname) ORDER BY brett_no SEPARATOR ", ") AS spieler
-					FROM teilnahmen
-					WHERE teilnahmen.team_id = teams.team_id
+					FROM participations
+					WHERE participations.team_id = teams.team_id
 					AND NOT ISNULL(brett_no)) AS verein
 				, tabellenstaende.platz_no
 				, tabellenstaende.platz_no AS rang
@@ -210,21 +210,21 @@ function mod_certificates_urkunde($params) {
 		// @todo ORDER BY
 	} else {
 		// Spieler
-		$sql = 'SELECT teilnahmen.person_id
-				, CONCAT(teilnahmen.t_vorname, " ", IFNULL(CONCAT(teilnahmen.t_namenszusatz, " "), ""), teilnahmen.t_nachname) AS spieler
-				, CONCAT(teilnahmen.t_vorname, " ", IFNULL(CONCAT(teilnahmen.t_namenszusatz, " "), "")) AS vorname
-				, teilnahmen.t_nachname AS nachname
+		$sql = 'SELECT participations.person_id
+				, CONCAT(participations.t_vorname, " ", IFNULL(CONCAT(participations.t_namenszusatz, " "), ""), participations.t_nachname) AS spieler
+				, CONCAT(participations.t_vorname, " ", IFNULL(CONCAT(participations.t_namenszusatz, " "), "")) AS vorname
+				, participations.t_nachname AS nachname
 				, t_verein AS verein
 				, urkundentext
 				, tabellenstaende.platz_no
-			FROM teilnahmen
+			FROM participations
 			LEFT JOIN persons USING (person_id)
 			LEFT JOIN tabellenstaende
-				ON tabellenstaende.person_id = teilnahmen.person_id
-				AND tabellenstaende.event_id = teilnahmen.event_id
+				ON tabellenstaende.person_id = participations.person_id
+				AND tabellenstaende.event_id = participations.event_id
 				AND tabellenstaende.runde_no = %d
-			WHERE teilnahmen.event_id = %d AND usergroup_id = %d
-			AND NOT ISNULL(teilnahmen.person_id)
+			WHERE participations.event_id = %d AND usergroup_id = %d
+			AND NOT ISNULL(participations.person_id)
 			%s
 			%s
 		';
