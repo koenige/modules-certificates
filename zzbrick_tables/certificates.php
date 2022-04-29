@@ -8,7 +8,7 @@
  * http://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014, 2019-2021 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014, 2019-2022 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -25,7 +25,7 @@ $zz['fields'][15]['field_name'] = 'bild';
 $zz['fields'][15]['type'] = 'upload_image';
 $zz['fields'][15]['path'] = [
 	'root' => $zz_setting['media_folder'].'/urkunden/',
-	'webroot' => '/intern/dateien/urkunden/',
+	'webroot' => $zz_setting['media_internal_path'].'/urkunden/',
 	'field1' => 'identifier', 
 	'string2' => '.jpeg'
 ];
