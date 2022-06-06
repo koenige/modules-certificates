@@ -276,6 +276,7 @@ function mod_certificates_urkunde($params) {
 	}
 	$pdf = new TFPDF('P', 'pt', 'A4');		// panorama = p, DIN A4, 595 x 842
 	$pdf->setCompression(true);
+	$pdf->setMargins(0,0);
 	if (!empty($event['p']['font_file'])) {
 		foreach ($event['p']['font_file'] as $typeface => $font_file) {
 			$font_path = pathinfo($font_file);

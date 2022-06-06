@@ -2,8 +2,6 @@
 
 function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 
-	$pdf->setMargins(0,0);
-
 	foreach ($data as $line) {
 		$pdf->addPage();
 		$pdf->image($vorlagen.'/374-Dinourkunde.png', 30, 30, 532, 501);

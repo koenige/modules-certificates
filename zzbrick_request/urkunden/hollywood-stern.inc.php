@@ -2,8 +2,6 @@
 
 function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 
-	$pdf->setMargins(0,0);
-
 	foreach ($data as $line) {
 		$pdf->addPage();
 		$pdf->image($vorlagen.'/246-Urkunde-Stern.jpg', 51, 25, 492, 470);
