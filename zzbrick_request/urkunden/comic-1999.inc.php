@@ -2,9 +2,6 @@
 
 function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 
-	$pdf->AddFont('ErasITC-Light', '', 'ErasITC-Light.TTF', true);
-	$pdf->AddFont('ErasITC-Bold', '', 'ErasITC-Bold.TTF', true);
-
 	$pdf->setMargins(0,0);
 
 	foreach ($data as $line) {
@@ -25,13 +22,13 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 		}
 
 	// Spielername
-		$pdf->setFont('ErasITC-Bold', '', 36);
+		$pdf->setFont($turnier['font_bold'], '', 36);
 		$pdf->setTextColor(0, 102, 204);   // Chessyblau
 		foreach ($line['spieler'] as $spieler) {
 			$pdf->Cell(0, 40, $spieler, 0, 2, 'C');
 		}
 
-		$pdf->setFont('ErasITC-Bold', '', 24);
+		$pdf->setFont($turnier['font_bold'], '', 24);
 		$pdf->setTextColor(0, 0, 0);   // Schwarz
 		$pdf->SetXY(0, $pdf->getY() + 10);
 
@@ -42,7 +39,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 
 	// Turniername
 	// Platzierung/mit Erfolg teilgenommen
-		$pdf->setFont('ErasITC-Light', '', 14);
+		$pdf->setFont($turnier['font_regular'], '', 14);
 		$pdf->SetXY(0, $pdf->getY() + 14);
 		if ($turnier['turnierzahl'])
 			$pdf->Cell(0, 18, 'hat bei der '.$turnier['obertitel_dativ'], 0, 0, 'C');
@@ -53,12 +50,12 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 		if ($type === 'platz') {
 			$pdf->SetX(144);
 			$pdf->Cell(90, 44, 'den', 0, 0, 'R');
-			$pdf->setFont('ErasITC-Bold', '', 18);
+			$pdf->setFont($turnier['font_bold'], '', 18);
 			$pdf->Cell(110, 42, $line['rang'].'. Platz', 0, 0, $line['rang'] ? 'C' : 'R');
-			$pdf->setFont('ErasITC-Light', '', 14);
+			$pdf->setFont($turnier['font_regular'], '', 14);
 			$pdf->Cell(90, 44, 'belegt', 0, 2, 'L'); 
 		} else {
-			$pdf->setFont('ErasITC-Bold', '', 14);
+			$pdf->setFont($turnier['font_bold'], '', 14);
 			if ($line['textzeile'] === 'hat mit Erfolg teilgenommen') {
 				$line['textzeile'] = 'mit Erfolg teilgenommen';
 			}
@@ -66,7 +63,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 		}
 
 	// Fuß
-		$pdf->setFont('ErasITC-Light', '', 12);
+		$pdf->setFont($turnier['font_regular'], '', 12);
 		$pdf->image($vorlagen.'/DSJ-Logo-rund-Schrift-rund-gelb.png', 248, 700, 98, 98);
 		$pdf->SetXY(0, 660);
 		$pdf->Cell(0, 14, $turnier['place'].', '.$turnier['date_of_certificate'], 0, 0, 'C'); 

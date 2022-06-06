@@ -2,9 +2,6 @@
 
 function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 
-	$pdf->AddFont('ErasITC-Light', '', 'ErasITC-Light.TTF', true);
-	$pdf->AddFont('ErasITC-Bold', '', 'ErasITC-Bold.TTF', true);
-
 	$pdf->setMargins(0,0);
 
 	foreach ($data as $line) {
@@ -13,7 +10,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 
 	// Turniername
 		$pdf->SetXY(10, 430);
-		$pdf->setFont('ErasITC-Bold', '', 18);
+		$pdf->setFont($turnier['font_bold'], '', 18);
 		$pdf->Cell(575, 20, $turnier['obertitel'], 0, 2, 'C');
 		$pdf->Cell(575, 20, $turnier['titel'], 0, 2, 'C');
 		$pdf->Cell(575, 20, $turnier['untertitel'], 0, 2, 'C'); 
@@ -24,7 +21,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 		$abstand_oben = $pdf->getY() + 24;
 		$schriftgrad = 24;
 
-		$pdf->setFont('ErasITC-Bold', '', $schriftgrad);
+		$pdf->setFont($turnier['font_bold'], '', $schriftgrad);
 		if (strlen($line['spieler']) > 34 AND !empty($line['vorname'])) {
 			// Sonderfall 2009, geht nur, wenn Verein nur einzeilig ist!
 			if (strlen($line['vorname']) > 34) {
@@ -51,7 +48,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 		}
 
 	// Vereinsname
-		$pdf->setFont('ErasITC-Light', '', 18);
+		$pdf->setFont($turnier['font_regular'], '', 18);
 		$pdf->SetXY($abstand_links, $pdf->getY() + 8);
 		foreach ($line['verein'] as $vereinteil) {
 			$pdf->Cell(405, 20, $vereinteil, 0, 2, 'C');
@@ -60,22 +57,22 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 	// Platzierung/mit Erfolg teilgenommen
 		if ($type === 'platz') {
 			$pdf->SetX(158);
-			$pdf->setFont('ErasITC-Light', '', 18);
+			$pdf->setFont($turnier['font_regular'], '', 18);
 			$pdf->Cell(90, 44, 'hat den', 0, 0, 'R');
-			$pdf->setFont('ErasITC-Bold', '', 24);
+			$pdf->setFont($turnier['font_bold'], '', 24);
 			$pdf->Cell(110, 42, $line['rang'].'. Platz', 0, 0, $line['rang'] ? 'C' : 'R'); 
-			$pdf->setFont('ErasITC-Light', '', 18);
+			$pdf->setFont($turnier['font_regular'], '', 18);
 			$pdf->Cell(90, 44, 'belegt', 0, 2, 'L'); 
 		} else {
 			$pdf->SetX(220);
-			$pdf->setFont('ErasITC-Bold', '', 18);
+			$pdf->setFont($turnier['font_bold'], '', 18);
 			$pdf->Cell(145, 44, $line['textzeile'], 0, 0, 'C'); 
 		}
 
 	// Fuß
 		$pdf->image($vorlagen.'/DSJ-Logo.png', 248, 720, 98, 80);
 		$pdf->SetXY(0, 690);
-		$pdf->setFont('ErasITC-Light', '', 14);
+		$pdf->setFont($turnier['font_regular'], '', 14);
 		$pdf->Cell(0, 14, $turnier['place'].', '.$turnier['date_of_certificate'], 0, 0, 'C'); 
 		$pdf->text(110, 795, $turnier['signature_left']); 
 		$pdf->text(410, 795, $turnier['signature_right']);
