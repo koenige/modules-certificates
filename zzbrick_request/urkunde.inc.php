@@ -266,7 +266,10 @@ function mod_certificates_urkunde($params) {
 	$vorlagen = $zz_setting['media_folder'].'/urkunden-grafiken';
 	require_once $zz_setting['modules_dir'].'/default/libraries/tfpdf.inc.php';
 	require_once __DIR__.'/urkunden/'.$event['urkunde_kennung'].'.inc.php';
-	$pdf = cms_urkunde_out($event, $data, $vorlagen, $type);
+	
+	$pdf = new TFPDF('P', 'pt', 'A4');		// panorama = p, DIN A4, 595 x 842
+	$pdf->setCompression(true);
+	$pdf = cms_urkunde_out($pdf, $event, $data, $vorlagen, $type);
 
 	$folder = $zz_setting['tmp_dir'].'/urkunden/'.$event['identifier'];
 	wrap_mkdir($folder);
