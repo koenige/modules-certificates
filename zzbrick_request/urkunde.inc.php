@@ -51,6 +51,7 @@ function mod_certificates_urkunde($params) {
 			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
 			, IF(events.offen = "ja", 1 , NULL) AS offen
 			, SUBSTRING_INDEX(event_categories.path, "/", -1) AS event_category
+			, certificates.parameters AS certificate_parameters
 		FROM events
 		LEFT JOIN events_certificates USING (event_id)
 		LEFT JOIN certificates USING (certificate_id)
@@ -63,6 +64,8 @@ function mod_certificates_urkunde($params) {
 	$sql = sprintf($sql, $params[0], wrap_db_escape($params[1]));
 	$event = wrap_db_fetch($sql);
 	if (!$event) return false;
+	if ($event['certificate_parameters'])
+		parse_str($event['certificate_parameters'], $event['certificate_parameters']);
 	if (empty($event['urkunde_kennung'])) {
 		$page['url_ending'] = 'none';
 		$page['title'] = $event['event'].' '.$event['year'];
@@ -267,6 +270,10 @@ function mod_certificates_urkunde($params) {
 	require_once $zz_setting['modules_dir'].'/default/libraries/tfpdf.inc.php';
 	require_once __DIR__.'/urkunden/'.$event['urkunde_kennung'].'.inc.php';
 	
+	if (!empty($event['certificate_parameters']['memory_limit'])) {
+		if (wrap_return_bytes(ini_get('memory_limit')) < wrap_return_bytes($event['certificate_parameters']['memory_limit']))
+			ini_set('memory_limit', $event['certificate_parameters']['memory_limit']);
+	}
 	$pdf = new TFPDF('P', 'pt', 'A4');		// panorama = p, DIN A4, 595 x 842
 	$pdf->setCompression(true);
 	$pdf = cms_urkunde_out($pdf, $event, $data, $vorlagen, $type);
