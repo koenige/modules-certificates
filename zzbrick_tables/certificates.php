@@ -49,6 +49,11 @@ $zz['fields'][3]['hide_in_list'] = true;
 $zz['fields'][4]['field_name'] = 'remarks';
 $zz['fields'][4]['type'] = 'memo';
 
+$zz['fields'][5]['field_name'] = 'parameters';
+$zz['fields'][5]['type'] = 'parameter';
+$zz['fields'][5]['hide_in_list'] = true;
+
+
 $zz['sql'] = 'SELECT certificates.*
 	FROM certificates
 ';

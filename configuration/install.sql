@@ -16,6 +16,7 @@ CREATE TABLE `certificates` (
   `certificate` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `identifier` varchar(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `remarks` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `parameters` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`certificate_id`),
   UNIQUE KEY `identifier` (`identifier`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
