@@ -65,7 +65,7 @@ function mod_certificates_urkunde($params) {
 	$event = wrap_db_fetch($sql);
 	if (!$event) return false;
 	if ($event['certificate_parameters'])
-		parse_str($event['certificate_parameters'], $event['certificate_parameters']);
+		parse_str($event['certificate_parameters'], $event['p']);
 	if (empty($event['urkunde_kennung'])) {
 		$page['url_ending'] = 'none';
 		$page['title'] = $event['event'].' '.$event['year'];
@@ -270,9 +270,9 @@ function mod_certificates_urkunde($params) {
 	require_once $zz_setting['modules_dir'].'/default/libraries/tfpdf.inc.php';
 	require_once __DIR__.'/urkunden/'.$event['urkunde_kennung'].'.inc.php';
 	
-	if (!empty($event['certificate_parameters']['memory_limit'])) {
-		if (wrap_return_bytes(ini_get('memory_limit')) < wrap_return_bytes($event['certificate_parameters']['memory_limit']))
-			ini_set('memory_limit', $event['certificate_parameters']['memory_limit']);
+	if (!empty($event['p']['memory_limit'])) {
+		if (wrap_return_bytes(ini_get('memory_limit')) < wrap_return_bytes($event['p']['memory_limit']))
+			ini_set('memory_limit', $event['p']['memory_limit']);
 	}
 	$pdf = new TFPDF('P', 'pt', 'A4');		// panorama = p, DIN A4, 595 x 842
 	$pdf->setCompression(true);
