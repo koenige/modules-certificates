@@ -2,8 +2,8 @@
 
 function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 
-	$pdf->AddFont('eraslight', '', 'ERASLGHT.TTF', true);
-	$pdf->AddFont('ErasITC-Bold', '', 'ERASBD.TTF', true);
+	$pdf->AddFont('ErasITC-Light', '', 'ErasITC-Light.TTF', true);
+	$pdf->AddFont('ErasITC-Bold', '', 'ErasITC-Bold.TTF', true);
 
 	$pdf->setMargins(0,0);
 
@@ -13,7 +13,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 
 	// Turniername
 		$pdf->SetXY(10, 540);
-		$pdf->setFont('eraslight', '', 24);
+		$pdf->setFont('ErasITC-Light', '', 24);
 		$pdf->Cell(575, 24, $turnier['titel'], 0, 2, 'C');
 		// @todo untertitel?
 
@@ -42,12 +42,12 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 		}
 
 	// Platzierung/mit Erfolg teilgenommen
-		$pdf->setFont('eraslight', '', 24);
+		$pdf->setFont('ErasITC-Light', '', 24);
 		$pdf->Cell(595, 32, 'hat den', 0, 2, 'C');
 		$pdf->setFont('ErasITC-Bold', '', 30);
 		$pdf->SetX(230);
 		$pdf->Cell(145, 34, $line['rang'].'. Platz', 0, 1, $line['rang'] ? 'C' : 'R'); 
-		$pdf->setFont('eraslight', '', 24);
+		$pdf->setFont('ErasITC-Light', '', 24);
 		if (!empty($line['urkundentext'])) {
 			$pdf->Cell(595, 28, 'belegt '.$line['urkundentext'], 0, 2, 'C'); 
 		} else {
@@ -56,7 +56,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 
 	// Fuß
 		$rechter_rand = 0;
-		$pdf->setFont('eraslight', '', 14);
+		$pdf->setFont('ErasITC-Light', '', 14);
 		$pdf->text($rechter_rand + 220, 740, $turnier['place'].', '.$turnier['date_of_certificate']); 
 		$pdf->text($rechter_rand + 160, 800, $turnier['signature_left']); 
 		$pdf->text($rechter_rand + 320, 800, $turnier['signature_right']); 

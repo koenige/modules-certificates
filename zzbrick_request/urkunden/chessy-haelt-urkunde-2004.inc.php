@@ -7,8 +7,8 @@
 
 function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 
-	$pdf->AddFont('eraslight', '', 'ERASLGHT.TTF', true);
-	$pdf->AddFont('ErasITC-Bold', '', 'ERASBD.TTF', true);
+	$pdf->AddFont('ErasITC-Light', '', 'ErasITC-Light.TTF', true);
+	$pdf->AddFont('ErasITC-Bold', '', 'ErasITC-Bold.TTF', true);
 
 	foreach ($data as $line) {
 		$pdf->addPage();
@@ -54,7 +54,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 		} else {
 			$fontsize = 20;
 		}
-		$pdf->setFont('eraslight', '', $fontsize);
+		$pdf->setFont('ErasITC-Light', '', $fontsize);
 		$pdf->SetXY(168, $pdf->getY() + 4);
 		foreach ($verein as $teil) {
 			$pdf->Cell(300, $fontsize * 1.2, $teil, 0, 2, 'C');
@@ -65,7 +65,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 		$abstand = (count($verein) + count($spieler) < 5) ? 24 : 4;
 		$pdf->SetXY(168, $pdf->getY() + $abstand);
 		if (!empty($turnier['titel_dativ'])) {
-			$pdf->setFont('eraslight', '', 14);
+			$pdf->setFont('ErasITC-Light', '', 14);
 			$pdf->Cell(300, 20, 'hat bei der'.($turnier['obertitel'] ? ' '.$turnier['obertitel_dativ'] : ''), 0, 2, 'C');
 			$pdf->Cell(300, 20, $turnier['titel_dativ'], 0, 2, 'C');
 			$pdf->Cell(300, 20, $turnier['untertitel'], 0, 2, 'C');
@@ -75,11 +75,11 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 			$pdf->SetXY($pdf->getX() + 8, $pdf->getY());
 		}
 		if ($type === 'platz') {
-			$pdf->setFont('eraslight', '', 14);
+			$pdf->setFont('ErasITC-Light', '', 14);
 			$pdf->Cell(90, 34, !empty($turnier['titel_dativ']) ? 'den' : 'hat den', 0, 0, 'R');
 			$pdf->setFont('ErasITC-Bold', '', 18);
 			$pdf->Cell(110, 32, $line['rang'].'. Platz', 0, 0, $line['rang'] ? 'C' : 'R');
-			$pdf->setFont('eraslight', '', 14);
+			$pdf->setFont('ErasITC-Light', '', 14);
 			$pdf->Cell(90, 34, 'belegt', 0, 2, 'L'); 
 		} else {
 			if ($line['textzeile'] === 'hat mit Erfolg teilgenommen' AND !empty($turnier['titel_dativ'])) {
@@ -89,7 +89,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 		}
 
 	// Fuß		
-		$pdf->setFont('eraslight', '', 11);
+		$pdf->setFont('ErasITC-Light', '', 11);
 		$pdf->SetXY(295, 630);
 		$pdf->Cell(185, 15, $turnier['place'].', '.$turnier['date_of_certificate'], 0, 2, 'C'); 
 		$pdf->SetXY(295, 690);

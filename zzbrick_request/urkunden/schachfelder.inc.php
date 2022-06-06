@@ -2,8 +2,8 @@
 
 function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 
-	$pdf->AddFont('eraslight', '', 'ERASLGHT.TTF', true);
-	$pdf->AddFont('ErasITC-Bold', '', 'ERASBD.TTF', true);
+	$pdf->AddFont('ErasITC-Light', '', 'ErasITC-Light.TTF', true);
+	$pdf->AddFont('ErasITC-Bold', '', 'ErasITC-Bold.TTF', true);
 
 	$pdf->setMargins(0,0);
 
@@ -51,7 +51,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 		}
 
 	// Vereinsname
-		$pdf->setFont('eraslight', '', 18);
+		$pdf->setFont('ErasITC-Light', '', 18);
 		$pdf->SetXY($abstand_links, $pdf->getY() + 8);
 		foreach ($line['verein'] as $vereinteil) {
 			$pdf->Cell(405, 20, $vereinteil, 0, 2, 'C');
@@ -60,11 +60,11 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 	// Platzierung/mit Erfolg teilgenommen
 		if ($type === 'platz') {
 			$pdf->SetX(158);
-			$pdf->setFont('eraslight', '', 18);
+			$pdf->setFont('ErasITC-Light', '', 18);
 			$pdf->Cell(90, 44, 'hat den', 0, 0, 'R');
 			$pdf->setFont('ErasITC-Bold', '', 24);
 			$pdf->Cell(110, 42, $line['rang'].'. Platz', 0, 0, $line['rang'] ? 'C' : 'R');
-			$pdf->setFont('eraslight', '', 18);
+			$pdf->setFont('ErasITC-Light', '', 18);
 			$pdf->Cell(90, 44, 'belegt', 0, 2, 'L'); 
 		} else {
 			$pdf->SetX(220);
@@ -75,7 +75,7 @@ function cms_urkunde_out($pdf, $turnier, $data, $vorlagen, $type) {
 	// Fuß
 		$rechter_rand = -80;
 		$pdf->image($vorlagen.'/DSJ-Logo.jpg', 366, 675, 145, 120);
-		$pdf->setFont('eraslight', '', 14);
+		$pdf->setFont('ErasITC-Light', '', 14);
 		$pdf->text($rechter_rand + 220, 710, $turnier['place'].', '.$turnier['date_of_certificate']); 
 		$pdf->text($rechter_rand + 185, 790, $turnier['signature_left']); 
 		$pdf->text($rechter_rand + 340, 790, $turnier['signature_right']);
