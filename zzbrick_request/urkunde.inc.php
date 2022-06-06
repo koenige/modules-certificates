@@ -284,7 +284,10 @@ function mod_certificates_urkunde($params) {
 			$event['font_'.$typeface] = $font_path['filename'];
 		}
 	}
-	$pdf = cms_urkunde_out($pdf, $event, $data, $vorlagen, $type);
+	foreach ($data as $line) {
+		$pdf->addPage();
+		$pdf = cms_urkunde_out($pdf, $event, $line, $vorlagen, $type);
+	}
 
 	$folder = $zz_setting['tmp_dir'].'/urkunden/'.$event['identifier'];
 	wrap_mkdir($folder);
