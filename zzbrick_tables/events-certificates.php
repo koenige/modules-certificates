@@ -62,14 +62,39 @@ $zz['fields'][7]['title'] = 'Signature, right';
 $zz['fields'][7]['field_name'] = 'signature_right';
 $zz['fields'][7]['hide_in_list'] = true;
 
+$zz['fields'][8]['title'] = 'Logo';
+$zz['fields'][8]['field_name'] = 'logo_medium_id';
+$zz['fields'][8]['id_field_name'] = 'media.medium_id';
+$zz['fields'][8]['type'] = 'select';
+$zz['fields'][8]['sql'] = sprintf('SELECT /*_PREFIX_*/media.medium_id
+		, folders.title AS folder
+		, CONCAT("[", /*_PREFIX_*/media.medium_id, "] ", /*_PREFIX_*/media.title) AS image
+	FROM /*_PREFIX_*/media 
+	LEFT JOIN /*_PREFIX_*/media folders
+		ON /*_PREFIX_*/media.main_medium_id = folders.medium_id
+	WHERE /*_PREFIX_*/media.filetype_id != %d
+	ORDER BY folders.title, /*_PREFIX_*/media.title', wrap_filetype_id('folder'));
+$zz['fields'][8]['sql_character_set'][1] = 'utf8';
+$zz['fields'][8]['sql_character_set'][2] = 'utf8';
+$zz['fields'][8]['display_field'] = 'image';
+$zz['fields'][8]['group'] = 'folder';
+$zz['fields'][8]['exclude_from_search'] = true;
+
 
 $zz['sql'] = 'SELECT events_certificates.*
 		, CONCAT(events.event, " ", IFNULL(event_year, YEAR(date_begin))) AS event
 		, events.identifier AS event_identifier
 		, certificates.certificate
+		, CONCAT("[", /*_PREFIX_*/media.medium_id, "] ", /*_PREFIX_*/media.title) AS image
 	FROM events_certificates
 	LEFT JOIN events USING (event_id)
 	LEFT JOIN certificates USING (certificate_id)
+	LEFT JOIN /*_PREFIX_*/media
+		ON /*_PREFIX_*/media.medium_id = events_certificates.logo_medium_id
+	LEFT JOIN /*_PREFIX_*/filetypes AS o_mime USING (filetype_id)
+	LEFT JOIN /*_PREFIX_*/filetypes AS t_mime 
+		ON /*_PREFIX_*/media.thumb_filetype_id = t_mime.filetype_id
+	WHERE o_mime.mime_content_type = "image"
 ';
 $zz['sqlorder'] = ' ORDER BY events.date_begin DESC, events.time_begin DESC,
 	events.identifier';
