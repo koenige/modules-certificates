@@ -51,7 +51,10 @@ function mod_certificates_urkunde($params) {
 			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
 			, IF(events.offen = "ja", 1 , NULL) AS offen
 			, SUBSTRING_INDEX(event_categories.path, "/", -1) AS event_category
+			, certificate_id
 			, certificates.parameters AS certificate_parameters
+			, /*_PREFIX_*/media.filename, /*_PREFIX_*/media.version
+			, o_mime.extension AS extension
 		FROM events
 		LEFT JOIN events_certificates USING (event_id)
 		LEFT JOIN certificates USING (certificate_id)
@@ -60,12 +63,15 @@ function mod_certificates_urkunde($params) {
 			ON events.series_category_id = series.category_id
 		LEFT JOIN categories event_categories
 			ON events.event_category_id = event_categories.category_id
+		LEFT JOIN /*_PREFIX_*/media
+			ON /*_PREFIX_*/media.medium_id = events_certificates.logo_medium_id
+		LEFT JOIN /*_PREFIX_*/filetypes AS o_mime USING (filetype_id)
+		LEFT JOIN /*_PREFIX_*/filetypes AS t_mime 
+			ON /*_PREFIX_*/media.thumb_filetype_id = t_mime.filetype_id
 		WHERE events.identifier = "%d/%s"';
 	$sql = sprintf($sql, $params[0], wrap_db_escape($params[1]));
 	$event = wrap_db_fetch($sql);
 	if (!$event) return false;
-	if ($event['certificate_parameters'])
-		parse_str($event['certificate_parameters'], $event['p']);
 	if (empty($event['urkunde_kennung'])) {
 		$page['url_ending'] = 'none';
 		$page['title'] = $event['event'].' '.$event['year'];
@@ -74,7 +80,8 @@ function mod_certificates_urkunde($params) {
 		$page['text'] = '<p class="error">Bitte wähle erst <a href="./bearbeiten/">eine Urkunde aus!</a></p>';
 		return $page;
 	}
-
+	if ($event['certificate_parameters'])
+		parse_str($event['certificate_parameters'], $event['p']);
 	if ($event['urkunde_parameter']) {
 		parse_str($event['urkunde_parameter'], $parameter);
 		unset($event['urkunde_parameter']);
@@ -83,6 +90,30 @@ function mod_certificates_urkunde($params) {
 	if (!isset($event['platzurkunden'])) {
 		$event['platzurkunden'] = wrap_get_setting('platzurkunden');
 	}
+
+	$sql = 'SELECT certificateelement_id
+			, categories.category
+			, media.filename, o_mime.extension
+			, certificateelements.parameters
+			, categories.parameters AS category_parameters
+	    FROM certificateelements
+	    LEFT JOIN categories
+	    	ON certificateelements.element_category_id = categories.category_id
+	    LEFT JOIN media
+	    	ON certificateelements.element_medium_id = media.medium_id
+		LEFT JOIN filetypes AS o_mime USING (filetype_id)
+	    WHERE certificate_id = %d';
+	$sql = sprintf($sql, $event['certificate_id']);
+	$event['elements'] = wrap_db_fetch($sql, 'certificateelement_id');
+	$param_fields = ['parameters','category_parameters'];
+	foreach ($event['elements'] as $id => &$element) {
+		foreach ($param_fields as $param_field) {
+			if (!$element[$param_field]) continue;
+			parse_str($element[$param_field], $element_params);
+			$element = array_merge($element, $element_params);
+		}
+	}
+
 	$event['urkundentext'] = 'hat mit Erfolg teilgenommen';
 	if (!isset($event['turnierzahl'])) {
 		$event['turnierzahl'] = false;
@@ -286,6 +317,16 @@ function mod_certificates_urkunde($params) {
 	}
 	foreach ($data as $line) {
 		$pdf->addPage();
+		foreach ($event['elements'] as $element) {
+			switch ($element['type']) {
+			case 'logo':
+				if (!$event['filename']) break;
+				$element['filename'] = $event['filename'];
+				$element['extension'] = $event['extension'];
+				mf_certificates_image($pdf, $element);
+				break;
+			}
+		}
 		$pdf = cms_urkunde_out($pdf, $event, $line, $vorlagen, $type);
 	}
 
