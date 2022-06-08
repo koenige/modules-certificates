@@ -87,7 +87,7 @@ function mod_certificates_urkunde($params) {
 	if (!isset($event['turnierzahl'])) {
 		$event['turnierzahl'] = false;
 	}
-	$event['date_of_certificate'] = datum_de_lang($event['date_of_certificate']);
+	$event['date_of_certificate'] = ltrim(wrap_date($event['date_of_certificate'], 'dates-de-long'), '0');
 
 	// Urkundentyp
 	$type = substr($params[2], 0, -4);
@@ -301,32 +301,6 @@ function mod_certificates_urkunde($params) {
 	$pdf->output('F', $file['name'], true);
 	wrap_file_send($file);
 	exit;
-}
-
-function datum_de_lang($datum) {
-	if (!$datum) return '';
-	$datum_de = explode("-", $datum);
-	if (substr($datum_de[2], 0, 1) === '0') {
-		$datum_de[2] = substr($datum_de[2], 1);
-	}
-	return $datum_de[2].'. '.monat($datum_de[1]).' '.$datum_de[0];	
-}
-
-function monat($monat) {
-	switch ($monat) {
-		case '1': return 'Januar';
-		case '2': return 'Februar';
-		case '3': return 'März';
-		case '4': return 'April';
-		case '5': return 'Mai';
-		case '6': return 'Juni';
-		case '7': return 'Juli';
-		case '8': return 'August';
-		case '9': return 'September';
-		case '10': return 'Oktober';
-		case '11': return 'November';
-		case '12': return 'Dezember';
-	}
 }
 
 /**
