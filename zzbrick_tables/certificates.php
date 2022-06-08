@@ -48,10 +48,16 @@ $zz['fields'][3]['hide_in_list'] = true;
 
 $zz['fields'][4]['field_name'] = 'remarks';
 $zz['fields'][4]['type'] = 'memo';
+$zz['fields'][4]['hide_in_list'] = true;
 
 $zz['fields'][5]['field_name'] = 'parameters';
 $zz['fields'][5]['type'] = 'parameter';
 $zz['fields'][5]['hide_in_list'] = true;
+
+$zz['fields'][6] = zzform_include_table('certificateelements');
+$zz['fields'][6]['title'] = 'Elements';
+$zz['fields'][6]['type'] = 'subtable';
+$zz['fields'][6]['fields'][2]['type'] = 'foreign_key';
 
 
 $zz['sql'] = 'SELECT certificates.*

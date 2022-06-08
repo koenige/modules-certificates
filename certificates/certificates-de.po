@@ -22,6 +22,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.8.12\n"
 
+#: zzbrick_tables/certificateelements.php
+msgid "Elements of Certificates"
+msgstr "Elemente der Urkunden"
+
+#: zzbrick_tables/certificateelements.php
+msgid "Element"
+msgstr "Element"
+
 #: zzbrick_tables/certificates.php
 msgid "Certificates"
 msgstr "Urkunden"
@@ -30,8 +38,12 @@ msgstr "Urkunden"
 msgid "Certificate"
 msgstr "Urkunde"
 
+#: zzbrick_tables/certificates.php
+msgid "Elements"
+msgstr "Elemente"
+
 #: zzbrick_tables/events-certificates.php
-msgid "Certificates for an event"
+msgid "Certificates for an Event"
 msgstr "Urkunden für eine Veranstaltung"
 
 #: zzbrick_tables/events-certificates.php
@@ -45,3 +57,6 @@ msgstr "Unterschrift links"
 #: zzbrick_tables/events-certificates.php
 msgid "Signature, right"
 msgstr "Unterschrift rechts"
+
+#~ msgid "Certificates for an event"
+#~ msgstr "Urkunden für eine Veranstaltung"

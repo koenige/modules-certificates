@@ -5,7 +5,7 @@
 # https://www.zugzwang.org/modules/certificates
 #
 # @author Gustaf Mossakowski <gustaf@koenige.org>
-# @copyright Copyright © 2021 Gustaf Mossakowski
+# @copyright Copyright © 2021-2022 Gustaf Mossakowski
 # @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
 #
 msgid ""
@@ -22,6 +22,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.8.12\n"
 
+#: zzbrick_tables/certificateelements.php
+msgid "Elements of Certificates"
+msgstr ""
+
+#: zzbrick_tables/certificateelements.php
+msgid "Element"
+msgstr ""
+
 #: zzbrick_tables/certificates.php
 msgid "Certificates"
 msgstr ""
@@ -30,8 +38,12 @@ msgstr ""
 msgid "Certificate"
 msgstr ""
 
+#: zzbrick_tables/certificates.php
+msgid "Elements"
+msgstr ""
+
 #: zzbrick_tables/events-certificates.php
-msgid "Certificates for an event"
+msgid "Certificates for an Event"
 msgstr ""
 
 #: zzbrick_tables/events-certificates.php

@@ -13,7 +13,7 @@
  */
 
 
-$zz['title'] = 'Certificates for an event';
+$zz['title'] = 'Certificates for an Event';
 $zz['table'] = 'events_certificates';
 
 $zz['fields'][1]['title'] = 'ID';
