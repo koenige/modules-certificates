@@ -43,7 +43,6 @@ $zz['fields'][3]['sql'] = 'SELECT certificate_id, certificate
 	FROM certificates
 	ORDER BY certificate';
 $zz['fields'][3]['display_field'] = 'certificate';
-$zz['fields'][3]['hide_in_list'] = true;
 $zz['fields'][3]['suffix'] = ' – <a href="/intern/urkunden/" target="_new">Galerie aller Urkunden</a>';
 
 $zz['fields'][4]['field_name'] = 'place';
@@ -94,7 +93,6 @@ $zz['sql'] = 'SELECT events_certificates.*
 	LEFT JOIN /*_PREFIX_*/filetypes AS o_mime USING (filetype_id)
 	LEFT JOIN /*_PREFIX_*/filetypes AS t_mime 
 		ON /*_PREFIX_*/media.thumb_filetype_id = t_mime.filetype_id
-	WHERE o_mime.mime_content_type = "image"
 ';
 $zz['sqlorder'] = ' ORDER BY events.date_begin DESC, events.time_begin DESC,
 	events.identifier';
