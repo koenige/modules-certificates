@@ -68,7 +68,6 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 // Fuß
 	$rechter_rand = 0;
 	$pdf->image($vorlagen.'/331-Ritter-auf-Pferd.png', 30, 616, 90, 191);
-	$pdf->image($vorlagen.'/DSJ-Logo.jpg', 430, 680, 145, 120);
 	$pdf->setFont($turnier['font_regular'], '', 14);
 	$pdf->text($rechter_rand + 220, 710, $turnier['place'].', '.$turnier['date_of_certificate']); 
 	$pdf->text($rechter_rand + 185, 790, $turnier['signature_left']); 

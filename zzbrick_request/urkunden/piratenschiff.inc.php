@@ -67,9 +67,7 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 	}
 
 // Fuß
-//		$pdf->image($vorlagen.'/DSJ-Logo.png', 248, 720, 98, 80);
-	$pdf->image($zz_setting['media_folder'].'/logos/DSJ Logo Kreis Schrift schwarz-gelb.png', 252, 720, 90, 90);
-	$pdf->SetXY(0, 690);
+	$pdf->SetXY(0, 675);
 	$pdf->setFont($turnier['font_regular'], '', 14);
 	$pdf->Cell(0, 14, $turnier['place'].', '.$turnier['date_of_certificate'], 0, 0, 'C'); 
 	$pdf->text(110, 795, $turnier['signature_left']); 

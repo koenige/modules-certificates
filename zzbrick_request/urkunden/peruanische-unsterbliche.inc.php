@@ -4,7 +4,6 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 
 	$pdf->image($vorlagen.'/Peruanische-Unsterbliche.png', 98, 40, 400, 400);
 	$pdf->image($vorlagen.'/209-Chessy mit Pokal und Lorbeer.png', 440, 610, 120, 197);
-	$pdf->image($vorlagen.'/DSJ-Logo.jpg', 30, 680, 145, 120);
 
 // Turniername
 	$pdf->SetXY(10, 450);

@@ -60,7 +60,6 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 
 // Fuß
 	$pdf->setFont($turnier['font_regular'], '', 12);
-	$pdf->image($vorlagen.'/DSJ-Logo-rund-Schrift-rund-gelb.png', 248, 700, 98, 98);
 	$pdf->SetXY(0, 660);
 	$pdf->Cell(0, 14, $turnier['place'].', '.$turnier['date_of_certificate'], 0, 0, 'C'); 
 	$pdf->text(110, 795, $turnier['signature_left']); 

@@ -71,7 +71,6 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 	}
 
 // Fuß
-	$pdf->image($vorlagen.'/DSJ-Logo.jpg', 50, 730, 88, 72);
 	$pdf->image($vorlagen.'/duesseldorfer-laeufer.png', 470, 730, 64, 72);
 	$pdf->SetXY(0, 730);
 	$pdf->setFont($turnier['font_regular'], '', 14);
