@@ -317,6 +317,7 @@ function mod_certificates_urkunde($params) {
 	}
 	foreach ($data as $line) {
 		$pdf->addPage();
+		$pdf = cms_urkunde_out($pdf, $event, $line, $vorlagen, $type);
 		foreach ($event['elements'] as $element) {
 			switch ($element['type']) {
 			case 'logo':
@@ -327,7 +328,6 @@ function mod_certificates_urkunde($params) {
 				break;
 			}
 		}
-		$pdf = cms_urkunde_out($pdf, $event, $line, $vorlagen, $type);
 	}
 
 	$folder = $zz_setting['tmp_dir'].'/urkunden/'.$event['identifier'];
