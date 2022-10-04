@@ -146,7 +146,7 @@ function mod_certificates_urkunde($params) {
 	if ($type === 'platz') {
 		$order_by_limit = sprintf('ORDER BY platz_no, t_nachname, t_vorname LIMIT %d ', $event['platzurkunden']);
 	} else {
-		$order_by_limit = 'ORDER BY t_nachname, t_vorname, person_id';
+		$order_by_limit = 'ORDER BY t_nachname, t_vorname, contact_id';
 	}
 	$filter = mf_tournaments_standings_filter($filter_kennung);
 	if ($filter['error']) return false;
@@ -244,7 +244,7 @@ function mod_certificates_urkunde($params) {
 		// @todo ORDER BY
 	} else {
 		// Spieler
-		$sql = 'SELECT participations.person_id
+		$sql = 'SELECT persons.person_id
 				, CONCAT(participations.t_vorname, " ", IFNULL(CONCAT(participations.t_namenszusatz, " "), ""), participations.t_nachname) AS spieler
 				, CONCAT(participations.t_vorname, " ", IFNULL(CONCAT(participations.t_namenszusatz, " "), "")) AS vorname
 				, participations.t_nachname AS nachname
@@ -252,13 +252,13 @@ function mod_certificates_urkunde($params) {
 				, urkundentext
 				, tabellenstaende.platz_no
 			FROM participations
-			LEFT JOIN persons USING (person_id)
+			LEFT JOIN persons USING (contact_id)
 			LEFT JOIN tabellenstaende
-				ON tabellenstaende.person_id = participations.person_id
+				ON tabellenstaende.person_id = persons.person_id
 				AND tabellenstaende.event_id = participations.event_id
 				AND tabellenstaende.runde_no = %d
 			WHERE participations.event_id = %d AND usergroup_id = %d
-			AND NOT ISNULL(participations.person_id)
+			AND NOT ISNULL(participations.contact_id)
 			%s
 			%s
 		';
