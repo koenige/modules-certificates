@@ -19,36 +19,29 @@
  * @param array $params
  *		[0]: Jahr
  *		[1]: Turnierkennung
- *		[2]: (optional) 'urkunden'
- *		[3]: Typ 'teilnahme.pdf', 'spezial.pdf', 'platz.pdf', 'platz-w.pdf' etc.
+ *		[2]: Typ 'teilnahme.pdf', 'spezial.pdf', 'platz.pdf', 'platz-w.pdf' etc.
+ * @param array $settings
+ * @param array $event
  * @return array $page
  */
-function mod_certificates_urkunde($params) {
-	global $zz_conf;
+function mod_certificates_urkunde($params, $settings = [], $event = []) {
 	global $zz_setting;
 	
-	if (count($params) === 4 AND $params[2] === 'urkunden') {
-		unset($params[2]);
-	}
+	if (!$event) return false;
 	if (count($params) !== 3) return false;
-	$params = array_values($params);
 	if (substr($params[2], -4) !== '.pdf') return false;
 
 	// Turnier
 	// @todo ggf. Urkundenstandardtext überschreibbar machen
-	$sql = 'SELECT event_id, event, runden, IFNULL(events.event_year, YEAR(events.date_begin)) AS year
+	$sql = 'SELECT event_id, runden
 			, place, date_of_certificate
 			, signature_left, signature_right
 			, certificates.identifier AS urkunde_kennung
 			, SUBSTRING_INDEX(series.path, "/", -1) AS series_path
-			, SUBSTRING_INDEX(SUBSTRING(series.path FROM 8), "/", 1) AS main_series
 			, series.category AS series
-			, series.category_short AS series_short
-			, events.identifier
-			, tabellenstaende, urkunde_parameter, alter_max
+			, tabellenstaende, alter_max
 			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
 			, IF(events.offen = "ja", 1 , NULL) AS offen
-			, SUBSTRING_INDEX(event_categories.path, "/", -1) AS event_category
 			, certificate_id
 			, certificates.parameters AS certificate_parameters
 			, /*_PREFIX_*/media.filename, /*_PREFIX_*/media.version
@@ -59,8 +52,6 @@ function mod_certificates_urkunde($params) {
 		LEFT JOIN tournaments USING (event_id)
 		LEFT JOIN categories series
 			ON events.series_category_id = series.category_id
-		LEFT JOIN categories event_categories
-			ON events.event_category_id = event_categories.category_id
 		LEFT JOIN /*_PREFIX_*/media
 			ON /*_PREFIX_*/media.medium_id = events_certificates.logo_medium_id
 		LEFT JOIN /*_PREFIX_*/filetypes AS o_mime USING (filetype_id)
@@ -68,12 +59,10 @@ function mod_certificates_urkunde($params) {
 			ON /*_PREFIX_*/media.thumb_filetype_id = t_mime.filetype_id
 		WHERE events.identifier = "%d/%s"';
 	$sql = sprintf($sql, $params[0], wrap_db_escape($params[1]));
-	$event = wrap_db_fetch($sql);
-	if (!$event) return false;
+	$event += wrap_db_fetch($sql);
+
 	if (empty($event['urkunde_kennung'])) {
-		$page['url_ending'] = 'none';
 		$page['title'] = $event['event'].' '.$event['year'];
-		$page['breadcrumbs'][] = '<a href="../">'.$event['event'].' '.$event['year'].'</a>';
 		$page['breadcrumbs'][] = 'Urkunde';
 		if ($path = wrap_path('certificates_event_edit', [$params[0], $params[1]])) {
 			$page['text'] = sprintf('<p class="error">Bitte wähle erst <a href="%s">eine Urkunde aus!</a></p>', $path);
@@ -84,9 +73,9 @@ function mod_certificates_urkunde($params) {
 	}
 	if ($event['certificate_parameters'])
 		parse_str($event['certificate_parameters'], $event['p']);
-	if ($event['urkunde_parameter']) {
-		parse_str($event['urkunde_parameter'], $parameter);
-		unset($event['urkunde_parameter']);
+	if ($event['tournament_parameter']) {
+		parse_str($event['tournament_parameter'], $parameter);
+		unset($event['tournament_parameter']);
 		$event = array_merge($parameter, $event);
 	}
 	if (!isset($event['platzurkunden'])) {
@@ -158,7 +147,7 @@ function mod_certificates_urkunde($params) {
 	$event['obertitel'] = '';
 	$event['obertitel_dativ'] = '';
 	$event['vereinsprefix'] = '';
-	switch ($event['main_series']) {
+	switch ($event['main_series_path']) {
 	case 'dem':
 		$event['titel'] = 'Deutsche Einzelmeisterschaft';
 		$event['titel_dativ'] = 'Deutschen Einzelmeisterschaft';
@@ -201,7 +190,7 @@ function mod_certificates_urkunde($params) {
 	case 'dvm':
 		$event['vereinsprefix'] = 'mit ';
 		$event['titel'] = explode(' ', $event['series']);
-		if ($event['main_series'] === 'dsm') {
+		if ($event['main_series_path'] === 'dsm') {
 			$event['untertitel'] = 'Wettkampfklasse '.array_pop($event['titel']);
 			array_pop($event['titel']);
 		} else {
