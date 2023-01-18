@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014-2022 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014-2023 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -21,7 +21,6 @@
  *		[1]: Turnierkennung
  *		[2]: (optional) 'urkunden'
  *		[3]: Typ 'teilnahme.pdf', 'spezial.pdf', 'platz.pdf', 'platz-w.pdf' etc.
- *				or 'bearbeiten'
  * @return array $page
  */
 function mod_certificates_urkunde($params) {
@@ -33,7 +32,6 @@ function mod_certificates_urkunde($params) {
 	}
 	if (count($params) !== 3) return false;
 	$params = array_values($params);
-	if ($params[2] === 'bearbeiten') return brick_format('%%% forms events-certificates '.$params[0].' '.$params[1].' %%%');
 	if (substr($params[2], -4) !== '.pdf') return false;
 
 	// Turnier
@@ -77,7 +75,11 @@ function mod_certificates_urkunde($params) {
 		$page['title'] = $event['event'].' '.$event['year'];
 		$page['breadcrumbs'][] = '<a href="../">'.$event['event'].' '.$event['year'].'</a>';
 		$page['breadcrumbs'][] = 'Urkunde';
-		$page['text'] = '<p class="error">Bitte wähle erst <a href="./bearbeiten/">eine Urkunde aus!</a></p>';
+		if ($path = wrap_path('certificates_event_edit', [$params[0], $params[1]])) {
+			$page['text'] = sprintf('<p class="error">Bitte wähle erst <a href="%s">eine Urkunde aus!</a></p>', $path);
+		} else {
+			$page['text'] = '<p class="error">Es ist noch keine Urkunde ausgewählt. Bitte die Verantwortlichen, eine auszuwählen.</p>';
+		}
 		return $page;
 	}
 	if ($event['certificate_parameters'])
