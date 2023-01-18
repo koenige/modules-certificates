@@ -8,7 +8,7 @@
  * http://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2021-2022 Gustaf Mossakowski
+ * @copyright Copyright © 2021-2023 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -43,7 +43,7 @@ $zz['fields'][3]['sql'] = 'SELECT certificate_id, certificate
 	FROM certificates
 	ORDER BY certificate';
 $zz['fields'][3]['display_field'] = 'certificate';
-$zz['fields'][3]['suffix'] = ' – <a href="/intern/urkunden/" target="_new">Galerie aller Urkunden</a>';
+$zz['fields'][3]['suffix'] = sprintf(' – <a href="%s" target="_new">Galerie aller Urkunden</a>', wrap_path('certificates_templates'));
 
 $zz['fields'][4]['field_name'] = 'place';
 $zz['fields'][4]['hide_in_list'] = true;
