@@ -8,7 +8,7 @@
  * http://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014, 2019-2022 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014, 2019-2023 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -66,3 +66,5 @@ $zz['sql'] = 'SELECT certificates.*
 $zz['sqlorder'] = ' ORDER BY certificate DESC';
 
 $zz_conf['list_display'] = 'ul';
+
+if (!wrap_access('certificates_templates_edit')) $zz['access'] = 'none';
