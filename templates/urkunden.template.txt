@@ -36,4 +36,4 @@ die mit Filzstift ausgefüllt werden können. <strong>Achtung:</strong> Während
 letzten Runde könnnen ggf. bereits Urkunden mit Plätzen ausgegeben werden,
 auch wenn das Turnier noch läuft.</p>
 
-<p><a href="%%% setting certificates_templates_path %%%">Galerie aller Urkunden</a></p>
+<p><a href="%%% path certificates_templates %%%">Galerie aller Urkunden</a></p>
