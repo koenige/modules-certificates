@@ -286,7 +286,7 @@ function mod_certificates_urkunde($params, $settings = [], $event = []) {
 	}
 
 	$vorlagen = wrap_setting('media_folder').'/urkunden-grafiken';
-	require_once wrap_setting('modules_dir').'/default/libraries/tfpdf.inc.php';
+	wrap_lib('tfpdf');
 	require_once __DIR__.'/urkunden/'.$event['urkunde_kennung'].'.inc.php';
 	
 	if (!empty($event['p']['memory_limit'])) {
