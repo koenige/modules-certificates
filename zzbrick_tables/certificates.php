@@ -24,8 +24,8 @@ $zz['fields'][15]['title'] = 'Preview';
 $zz['fields'][15]['field_name'] = 'bild';
 $zz['fields'][15]['type'] = 'upload_image';
 $zz['fields'][15]['path'] = [
-	'root' => $zz_setting['media_folder'].'/urkunden/',
-	'webroot' => $zz_setting['media_internal_path'].'/urkunden/',
+	'root' => wrap_setting('media_folder').'/urkunden/',
+	'webroot' => wrap_setting('media_internal_path').'/urkunden/',
 	'field1' => 'identifier', 
 	'string2' => '.jpeg'
 ];

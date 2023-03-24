@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2022 Gustaf Mossakowski
+ * @copyright Copyright © 2022-2023 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -20,9 +20,7 @@
  * @param array $element
  */
 function mf_certificates_image(&$pdf, $element) {
-	global $zz_setting;
-
-	$element['filename'] = $zz_setting['media_folder'].'/'.$element['filename'].'.master.'.$element['extension'];
+	$element['filename'] = wrap_setting('media_folder').'/'.$element['filename'].'.master.'.$element['extension'];
 	$element = mf_certificates_imagesize($element);
 	$element = mf_certificates_position($pdf, $element);
 	$pdf->image($element['filename'], $element['pos_x'], $element['pos_y'], $element['width'], $element['height']);

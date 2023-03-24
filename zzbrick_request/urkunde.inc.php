@@ -25,8 +25,6 @@
  * @return array $page
  */
 function mod_certificates_urkunde($params, $settings = [], $event = []) {
-	global $zz_setting;
-	
 	if (!$event) return false;
 	if (count($params) !== 3) return false;
 	if (substr($params[2], -4) !== '.pdf') return false;
@@ -78,9 +76,8 @@ function mod_certificates_urkunde($params, $settings = [], $event = []) {
 		unset($event['tournament_parameter']);
 		$event = array_merge($parameter, $event);
 	}
-	if (!isset($event['platzurkunden'])) {
-		$event['platzurkunden'] = wrap_get_setting('platzurkunden');
-	}
+	if (!isset($event['platzurkunden']))
+		$event['platzurkunden'] = wrap_setting('platzurkunden');
 
 	$sql = 'SELECT certificateelement_id
 			, categories.category
@@ -288,8 +285,8 @@ function mod_certificates_urkunde($params, $settings = [], $event = []) {
 		}
 	}
 
-	$vorlagen = $zz_setting['media_folder'].'/urkunden-grafiken';
-	require_once $zz_setting['modules_dir'].'/default/libraries/tfpdf.inc.php';
+	$vorlagen = wrap_setting('media_folder').'/urkunden-grafiken';
+	require_once wrap_setting('modules_dir').'/default/libraries/tfpdf.inc.php';
 	require_once __DIR__.'/urkunden/'.$event['urkunde_kennung'].'.inc.php';
 	
 	if (!empty($event['p']['memory_limit'])) {
@@ -321,7 +318,7 @@ function mod_certificates_urkunde($params, $settings = [], $event = []) {
 		}
 	}
 
-	$folder = $zz_setting['tmp_dir'].'/urkunden/'.$event['identifier'];
+	$folder = wrap_setting('tmp_dir').'/urkunden/'.$event['identifier'];
 	wrap_mkdir($folder);
 	if (file_exists($folder.'/urkunde-'.$type.'.pdf')) {
 		unlink($folder.'/urkunde-'.$type.'.pdf');

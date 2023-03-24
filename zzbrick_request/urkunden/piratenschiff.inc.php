@@ -1,8 +1,6 @@
 <?php
 
 function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
-	global $zz_setting;
-
 	$pdf->image($vorlagen.'/395-Piratenurkunde.png', 20, 20, 555, 403);
 
 // Turniername
