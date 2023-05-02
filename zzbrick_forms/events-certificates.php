@@ -15,7 +15,7 @@
 
 if (empty($brick['data']['event_id'])) wrap_quit(404);
 
-$zz = zzform_include_table('events-certificates');
+$zz = zzform_include('events-certificates');
 $zz['where']['event_id'] = $brick['data']['event_id'];
 
 $zz_conf['referer'] = '../';
