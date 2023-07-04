@@ -61,7 +61,7 @@ function mod_certificates_urkunde($params, $settings = [], $event = []) {
 
 	if (empty($event['urkunde_kennung'])) {
 		$page['title'] = $event['event'].' '.$event['year'];
-		$page['breadcrumbs'][] = 'Urkunde';
+		$page['breadcrumbs'][]['title'] = 'Urkunde';
 		if ($path = wrap_path('certificates_event_edit', [$params[0].'/'.$params[1]])) {
 			$page['text'] = sprintf('<p class="error">Bitte wähle erst <a href="%s">eine Urkunde aus!</a></p>', $path);
 		} else {
