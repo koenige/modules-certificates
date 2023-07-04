@@ -65,6 +65,6 @@ $zz['sql'] = 'SELECT certificates.*
 ';
 $zz['sqlorder'] = ' ORDER BY certificate DESC';
 
-$zz_conf['list_display'] = 'ul';
+$zz['list']['display'] = 'ul';
 
 if (!wrap_access('certificates_templates_edit')) $zz['access'] = 'none';
