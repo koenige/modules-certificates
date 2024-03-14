@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014-2022 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014-2022, 2024 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -22,7 +22,7 @@ function mod_certificates_urkunden($params) {
 			, (SELECT COUNT(*) FROM participations
 				WHERE NOT ISNULL(urkundentext)
 				AND event_id = events.event_id) AS spezialurkunden
-			, IFNULL(place, places.contact) AS turnierort
+			, IFNULL(place, places.contact) AS place
 			, tournaments.tabellenstaende
 			, IF(main_series.category = "Reihen", series.category, main_series.category) AS series
 		FROM events
@@ -52,7 +52,7 @@ function mod_certificates_urkunden($params) {
 		$sql = 'SELECT events.event_id, events.identifier, events.event
 				, IFNULL(events.event_year, YEAR(events.date_begin)) AS year
 				, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS duration
-				, IFNULL(place, places.contact) AS turnierort
+				, IFNULL(place, places.contact) AS place
 			FROM events
 			LEFT JOIN contacts places
 				ON events.place_contact_id = places.contact_id
@@ -86,7 +86,7 @@ function mod_certificates_urkunden($params) {
 			$data['event'] = $event['event'];
 		}
 		$data['duration'] = $event['duration'];
-		$data['turnierort'] = $event['turnierort'];
+		$data['place'] = $event['place'];
 	}
 
 	$page['text'] = wrap_template('urkunden', $data);
