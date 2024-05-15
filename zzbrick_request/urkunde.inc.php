@@ -188,8 +188,7 @@ function mod_certificates_urkunde($params, $settings = [], $event = []) {
 		$event['vereinsprefix'] = 'mit ';
 		$event['titel'] = explode(' ', $event['series']);
 		if ($event['main_series_path'] === 'dsm') {
-			$event['untertitel'] = 'Wettkampfklasse '.array_pop($event['titel']);
-			array_pop($event['titel']);
+			$event['untertitel'] = mf_certificates_subtitle_dsm($event['titel']);
 		} else {
 			$event['untertitel'] = 'Altersklasse '.array_pop($event['titel']);
 		}
@@ -376,3 +375,20 @@ function cms_urkunde_zeile_anpassen($verein, $max_len, $len_per_row) {
 	if (empty($verein[0])) array_shift($verein); // falls erster String zu lang!
 	return $verein;
 }
+
+function mf_certificates_subtitle_dsm(&$title) {
+	$glue = [];
+	$glue_parts = false;
+	foreach ($title as $index => $part) {
+		if ($glue_parts) {
+			$glue[] = $title[$index];
+			unset($title[$index]);
+		}
+		if ($part === 'WK') {
+			$glue[] = 'Wettkampfklasse';
+			$glue_parts = true;
+		}
+	}
+	return implode(' ', $glue);
+}
+
