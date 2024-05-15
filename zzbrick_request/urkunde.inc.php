@@ -385,6 +385,7 @@ function mf_certificates_subtitle_dsm(&$title) {
 			unset($title[$index]);
 		}
 		if ($part === 'WK') {
+			unset($title[$index]);
 			$glue[] = 'Wettkampfklasse';
 			$glue_parts = true;
 		}
