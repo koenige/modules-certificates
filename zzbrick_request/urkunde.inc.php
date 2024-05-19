@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014-2023 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014-2024 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -244,14 +244,14 @@ function mod_certificates_urkunde($params, $settings = [], $event = []) {
 				ON tabellenstaende.person_id = persons.person_id
 				AND tabellenstaende.event_id = participations.event_id
 				AND tabellenstaende.runde_no = %d
-			WHERE participations.event_id = %d AND usergroup_id = %d
+			WHERE participations.event_id = %d AND usergroup_id = /*_ID usergroups spieler _*/
 			AND NOT ISNULL(participations.contact_id)
+			AND participations.status_category_id = /*_ID categories participation-status/participant _*/
 			%s
 			%s
 		';
 		$sql = sprintf($sql, $event['runden']
 			, $event['event_id']
-			, wrap_id('usergroups', 'spieler')
 			, $where ? ' AND '.implode(' AND ', $where) : ''
 			, $order_by_limit
 		);
