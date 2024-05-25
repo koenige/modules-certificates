@@ -14,12 +14,12 @@
 
 
 /**
- * Druck der Urkunden für ein Turnier
+ * print certificates for an event
  *
  * @param array $params
- *		[0]: Jahr
- *		[1]: Turnierkennung
- *		[2]: Typ 'teilnahme.pdf', 'spezial.pdf', 'platz.pdf', 'platz-w.pdf' etc.
+ *		[0]: year
+ *		[1]: event identifier
+ *		[2]: type 'teilnahme.pdf', 'spezial.pdf', 'platz.pdf', 'platz-w.pdf' etc.
  * @param array $settings
  * @param array $event
  * @return array $page
