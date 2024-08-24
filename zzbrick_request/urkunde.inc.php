@@ -272,9 +272,6 @@ function mod_certificates_urkunde($params, $settings = [], $event = []) {
 	if ($event['event_category'] === 'einzel') {
 		$i = 1;
 		foreach ($data as $person_id => $person) {
-			if (function_exists('my_verein_saeubern')) {
-				$data[$person_id]['verein'] = my_verein_saeubern($person['verein']);
-			}
 			if ($type === 'platz' AND !empty($filter['kennung'])) {
 				$data[$person_id]['rang'] = $i;
 				$i++;
