@@ -24,10 +24,9 @@
  * @param array $event
  * @return array $page
  */
-function mod_certificates_urkunde($params, $settings = [], $event = []) {
+function mod_certificates_certificate($params, $settings = [], $event = []) {
 	if (!$event) return false;
 	if (count($params) !== 3) return false;
-	if (substr($params[2], -4) !== '.pdf') return false;
 
 	// Turnier
 	// @todo ggf. Urkundenstandardtext überschreibbar machen
@@ -109,7 +108,7 @@ function mod_certificates_urkunde($params, $settings = [], $event = []) {
 	$event['date_of_certificate'] = ltrim(wrap_date($event['date_of_certificate'], 'dates-de-long'), '0');
 
 	// Urkundentyp
-	$type = substr($params[2], 0, -4);
+	$type = $params[2];
 	$possible_types = ['teilnahme', 'spezial', 'platz'];
 	if ($event['tabellenstaende']) {
 		$tabellenstaende = explode(',', $event['tabellenstaende']);

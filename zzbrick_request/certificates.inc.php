@@ -13,7 +13,7 @@
  */
 
 
-function mod_certificates_urkunden($params) {
+function mod_certificates_certificates($params) {
 	if (count($params) !== 2) return false;
 	
 	$sql = 'SELECT events.event_id, events.identifier, events.event

@@ -6,7 +6,7 @@
  * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2022 Gustaf Mossakowski
+ * @copyright Copyright © 2022, 2024 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -27,3 +27,5 @@
 /* 2022-06-08-11 */	INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Place & Date', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'ertificate-element/place-date', '&alias=certificate-element/place-date&type=place-date', 6, NOW());
 /* 2022-06-08-12 */	INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Signature, left', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/signature-left', '&alias=certificate-element/signature-left&type=signature-left', 7, NOW());
 /* 2022-06-08-13 */	INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Signature, right', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/signature-right', '&alias=certificate-element/signature-right&type=signature-right', 8, NOW());
+/* 2024-08-24-1 */	UPDATE webpages SET content = REPLACE(content, '%%% request urkunde *', '%%% request certificate *'), identifier = CONCAT(identifier, '.pdf') WHERE content LIKE '%\%\%\% request urkunde *%';
+/* 2024-08-24-2 */	UPDATE webpages SET content = REPLACE(content, '%%% request urkunden ', '%%% request certificates ') WHERE content LIKE '%\%\%\% request urkunden %';
