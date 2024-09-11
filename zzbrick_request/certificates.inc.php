@@ -34,10 +34,14 @@ function mod_certificates_certificates($params) {
 			ON events.series_category_id = series.category_id
 		LEFT JOIN categories main_series
 			ON main_series.category_id = series.main_category_id
+		LEFT JOIN events_contacts events_places
+			ON events.event_id = events_places.event_id
+			AND events_places.role_category_id = /*_ID categories roles/location _*/
+			AND events_places.sequence = 1
 		LEFT JOIN contacts places
-			ON events.place_contact_id = places.contact_id
+			ON events_places.contact_id = places.contact_id
 		LEFT JOIN addresses
-			ON events.place_contact_id = addresses.contact_id
+			ON events_places.contact_id = addresses.contact_id
 		WHERE (main_series.path = "reihen/%s" OR events.identifier = "%d/%s")
 		AND IFNULL(events.event_year, YEAR(events.date_begin)) = %d
 		ORDER BY series.sequence, events.date_begin, events.identifier
@@ -54,10 +58,14 @@ function mod_certificates_certificates($params) {
 				, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS duration
 				, IFNULL(place, places.contact) AS place
 			FROM events
+			LEFT JOIN events_contacts events_places
+				ON events.event_id = events_places.event_id
+				AND events_places.role_category_id = /*_ID categories roles/location _*/
+				AND events_places.sequence = 1
 			LEFT JOIN contacts places
-				ON events.place_contact_id = places.contact_id
+				ON events_places.contact_id = places.contact_id
 			LEFT JOIN addresses
-				ON events.place_contact_id = addresses.contact_id
+				ON events_places.contact_id = addresses.contact_id
 			WHERE events.identifier = "%d/%s"
 		';
 		$sql = sprintf($sql, $params[0], wrap_db_escape($params[1]));
