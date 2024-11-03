@@ -323,8 +323,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	$file['etag_generate_md5'] = true;
 
 	$pdf->output('F', $file['name'], true);
-	wrap_file_send($file);
-	exit;
+	wrap_send_file($file);
 }
 
 /**
