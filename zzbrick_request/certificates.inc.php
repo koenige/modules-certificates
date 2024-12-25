@@ -97,7 +97,7 @@ function mod_certificates_certificates($params) {
 		$data['place'] = $event['place'];
 	}
 
-	$page['text'] = wrap_template('urkunden', $data);
+	$page['text'] = wrap_template('certificates', $data);
 	$page['title'] = 'Urkunden '.$data['event'].', '.wrap_date($event['duration']);
 	$page['breadcrumbs'][]['title'] = 'Urkunden';
 	$page['dont_show_h1'] = true;
