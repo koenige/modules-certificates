@@ -63,7 +63,6 @@ $zz['fields'][7]['hide_in_list'] = true;
 
 $zz['fields'][8]['title'] = 'Logo';
 $zz['fields'][8]['field_name'] = 'logo_medium_id';
-$zz['fields'][8]['id_field_name'] = 'media.medium_id';
 $zz['fields'][8]['type'] = 'select';
 $zz['fields'][8]['sql'] = 'SELECT /*_PREFIX_*/media.medium_id
 		, folders.title AS folder

@@ -38,7 +38,6 @@ $zz['fields'][3]['display_field'] = 'category';
 
 $zz['fields'][4]['title'] = 'Image';
 $zz['fields'][4]['field_name'] = 'element_medium_id';
-$zz['fields'][4]['id_field_name'] = 'medium_id';
 $zz['fields'][4]['type'] = 'select';
 $zz['fields'][4]['sql'] = 'SELECT /*_PREFIX_*/media.medium_id
 		, folders.title AS folder
@@ -57,7 +56,6 @@ $zz['fields'][4]['exclude_from_search'] = true;
 $zz['fields'][5]['field_name'] = 'parameters';
 $zz['fields'][5]['type'] = 'parameter';
 $zz['fields'][5]['hide_in_list'] = true;
-
 
 
 $zz['sql'] = 'SELECT certificateelements.*
