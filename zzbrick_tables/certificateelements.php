@@ -8,7 +8,7 @@
  * http://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2022 Gustaf Mossakowski
+ * @copyright Copyright © 2022, 2024 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -30,24 +30,24 @@ $zz['fields'][2]['display_field'] = 'certificate';
 $zz['fields'][3]['title'] = 'Element';
 $zz['fields'][3]['field_name'] = 'element_category_id';
 $zz['fields'][3]['type'] = 'select';
-$zz['fields'][3]['sql'] = sprintf('SELECT category_id, category
+$zz['fields'][3]['sql'] = 'SELECT category_id, category
 	FROM categories
-	WHERE main_category_id = %d
-	ORDER BY sequence, category', wrap_category_id('certificate-element'));
+	WHERE main_category_id = /*_ID categories certificate-element _*/
+	ORDER BY sequence, category';
 $zz['fields'][3]['display_field'] = 'category';
 
 $zz['fields'][4]['title'] = 'Image';
 $zz['fields'][4]['field_name'] = 'element_medium_id';
 $zz['fields'][4]['id_field_name'] = 'medium_id';
 $zz['fields'][4]['type'] = 'select';
-$zz['fields'][4]['sql'] = sprintf('SELECT /*_PREFIX_*/media.medium_id
+$zz['fields'][4]['sql'] = 'SELECT /*_PREFIX_*/media.medium_id
 		, folders.title AS folder
 		, CONCAT("[", /*_PREFIX_*/media.medium_id, "] ", /*_PREFIX_*/media.title) AS image
 	FROM /*_PREFIX_*/media 
 	LEFT JOIN /*_PREFIX_*/media folders
 		ON /*_PREFIX_*/media.main_medium_id = folders.medium_id
-	WHERE /*_PREFIX_*/media.filetype_id != %d
-	ORDER BY folders.title, /*_PREFIX_*/media.title', wrap_filetype_id('folder'));
+	WHERE /*_PREFIX_*/media.filetype_id != /*_ID filetypes folder _*/
+	ORDER BY folders.title, /*_PREFIX_*/media.title';
 $zz['fields'][4]['sql_character_set'][1] = 'utf8';
 $zz['fields'][4]['sql_character_set'][2] = 'utf8';
 $zz['fields'][4]['display_field'] = 'image';

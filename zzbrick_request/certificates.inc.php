@@ -29,7 +29,7 @@ function mod_certificates_certificates($params) {
 		LEFT JOIN tournaments USING (event_id)
 		JOIN participations
 			ON participations.event_id = events.event_id
-			AND participations.usergroup_id = %d
+			AND participations.usergroup_id = /*_ID usergroups spieler _*/
 		LEFT JOIN categories series
 			ON events.series_category_id = series.category_id
 		LEFT JOIN categories main_series
@@ -47,7 +47,6 @@ function mod_certificates_certificates($params) {
 		ORDER BY series.sequence, events.date_begin, events.identifier
 	';
 	$sql = sprintf($sql
-		, wrap_id('usergroups', 'spieler')
 		, wrap_db_escape($params[1]), $params[0]
 		, wrap_db_escape($params[1]), $params[0]
 	);
