@@ -15,7 +15,7 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 	$pdf->Cell(575, 22, $turnier['untertitel'], 0, 2, 'C'); 
 
 // Spielername
-	$line['verein'] = cms_urkunde_zeile_anpassen($line['verein'], 44, 36);
+	$line['verein'] = mf_certificates_balance_text($line['verein'], 44, 36);
 	$abstand_links = 95;
 	$abstand_oben = $pdf->getY() + 22;
 	$schriftgrad = 32;
@@ -41,7 +41,7 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 		}
 		$pdf->SetXY($abstand_links, $abstand_oben);
 		
-		$line['spieler'] = cms_urkunde_zeile_anpassen($line['spieler'], 33, 30);
+		$line['spieler'] = mf_certificates_balance_text($line['spieler'], 33, 30);
 		foreach ($line['spieler'] as $spieler) {
 			$pdf->Cell(405, 36, $spieler, 0, 2, 'C');
 		}

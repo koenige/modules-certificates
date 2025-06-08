@@ -19,13 +19,13 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 		}
 	}
 
-	$spieler = cms_urkunde_zeile_anpassen($line['spieler'], 20, 16);
-	$verein = cms_urkunde_zeile_anpassen($line['verein'], 28, 24);
+	$spieler = mf_certificates_balance_text($line['spieler'], 20, 16);
+	$verein = mf_certificates_balance_text($line['verein'], 28, 24);
 
 // Spielername
 	if (count($spieler) > 2) {
 		$fontsize = 20;
-		$spieler = cms_urkunde_zeile_anpassen($line['spieler'], 25, 20);
+		$spieler = mf_certificates_balance_text($line['spieler'], 25, 20);
 	} else {
 		$fontsize = 24;
 	}
@@ -42,10 +42,10 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 	}
 
 // Vereinsname
-	$verein = cms_urkunde_zeile_anpassen($line['verein'], 28, 24);
+	$verein = mf_certificates_balance_text($line['verein'], 28, 24);
 	if (count($verein) > 3) {
 		$fontsize = 16;
-		$verein = cms_urkunde_zeile_anpassen($line['verein'], 35, 30);
+		$verein = mf_certificates_balance_text($line['verein'], 35, 30);
 	} else {
 		$fontsize = 20;
 	}

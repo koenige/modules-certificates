@@ -11,7 +11,7 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 	// @todo untertitel?
 
 // Spielername
-	$line['verein'] = cms_urkunde_zeile_anpassen($line['verein'], 38, 22);
+	$line['verein'] = mf_certificates_balance_text($line['verein'], 38, 22);
 
 	$abstand_links = 95;
 	$abstand_oben = $pdf->getY() + 20;

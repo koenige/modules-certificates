@@ -327,48 +327,42 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 }
 
 /**
- * Umbruch von langen Vereinsnamen auf zwei Zeilen
+ * Balance long text in two lines
  *
  * @param string $verein
  * @param int $max_len
  * @param int $len_per_row
  * @return array
  */
-function cms_urkunde_zeile_anpassen($verein, $max_len, $len_per_row) {
-	if (strlen($verein) < $max_len) return [$verein];
-	if (strstr($verein, ', ')) {
-		$vereinteile = explode(', ', $verein);
-		$concat = ', ';
-	} else {
-		$vereinteile = explode(' ', $verein);
-		$concat = ' ';
-	}
-	$verein = [0 => ''];
+function mf_certificates_balance_text($text, $max_len, $len_per_row) {
+	if (strlen($text) < $max_len) return [$text];
+	$concat = strstr($text, ', ') ? ', ' : ' ';
+	$parts = explode($concat, $text);
+	$text = [0 => ''];
 	$i = 0;
-	foreach ($vereinteile as $vereinteil) {
-		if (strlen($verein[$i].$vereinteil) > $len_per_row) $i++;
-		if (!empty($verein[$i]))
-			$verein[$i] .= $concat;
+	foreach ($parts as $part) {
+		if (strlen($text[$i].$part) > $len_per_row) $i++;
+		if (!empty($text[$i]))
+			$text[$i] .= $concat;
 		else 
-			$verein[$i] = '';
-		if (strlen($vereinteil) >= $len_per_row AND strstr($vereinteil, '-')) {
-			$vereinteil = explode('-', $vereinteil);
-			foreach ($vereinteil as $index => $unterteilung) {
-				if (strlen($verein[$i].$unterteilung) >= $len_per_row) {
+			$text[$i] = '';
+		if (strlen($part) >= $len_per_row AND strstr($part, '-')) {
+			$part = explode('-', $part);
+			foreach ($part as $index => $sub_part) {
+				if (strlen($text[$i].$sub_part) >= $len_per_row) {
 					$i++;
-					$verein[$i] = '';
+					$text[$i] = '';
 				}
-				$verein[$i] .= $unterteilung;
-				if ($index < count($vereinteil) - 1) {
-					$verein[$i] .= '-';
-				}
+				$text[$i] .= $sub_part;
+				if ($index < count($part) - 1)
+					$text[$i] .= '-';
 			}
 		} else {
-			$verein[$i] .= $vereinteil;
+			$text[$i] .= $part;
 		}
 	}
-	if (empty($verein[0])) array_shift($verein); // falls erster String zu lang!
-	return $verein;
+	if (empty($text[0])) array_shift($text); // if first string too long
+	return $text;
 }
 
 function mf_certificates_subtitle_dsm(&$title) {

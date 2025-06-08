@@ -5,11 +5,11 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 	$pdf->image($vorlagen.'/Urkunde-1999-bunt.jpg', 31, 20, 533, 350);
 
 // Abstand von oben
-	$line['verein'] = cms_urkunde_zeile_anpassen($line['verein'], 44, 36);
+	$line['verein'] = mf_certificates_balance_text($line['verein'], 44, 36);
 	if (strlen($line['spieler']) > 20 AND !empty($line['vorname'])) {
 		$line['spieler'] = [$line['vorname'], $line['nachname']]; 
 	} else {
-		$line['spieler'] = cms_urkunde_zeile_anpassen($line['spieler'], 26, 20);
+		$line['spieler'] = mf_certificates_balance_text($line['spieler'], 26, 20);
 	}
 	if (count($line['spieler']) > 1 OR count($line['verein']) > 3) {
 		$pdf->SetXY(0, 380);
