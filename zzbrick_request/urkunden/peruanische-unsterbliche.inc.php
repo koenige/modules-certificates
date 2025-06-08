@@ -67,11 +67,10 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 	}
 
 // Fuß
-	$rechter_rand = 0;
 	$pdf->setFont($turnier['font_regular'], '', 14);
-	$pdf->text($rechter_rand + 220, 720, $turnier['place'].', '.$turnier['date_of_certificate']); 
-	$pdf->text($rechter_rand + 185, 800, $turnier['signature_left']); 
-	$pdf->text($rechter_rand + 340, 800, $turnier['signature_right']); 
+	$pdf->text(220, 720, $turnier['place'].', '.$turnier['date_of_certificate']); 
+	$pdf->text(185, 800, $turnier['signature_left']); 
+	$pdf->text(340, 800, $turnier['signature_right']); 
 
 	return $pdf;
 }
