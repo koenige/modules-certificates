@@ -25,11 +25,12 @@ if (wrap_setting('certificates_preview_media_folder')) {
 	$zz['fields'][15]['field_name'] = 'bild';
 	$zz['fields'][15]['type'] = 'upload_image';
 	$zz['fields'][15]['path'] = [
-		'root' => wrap_setting('media_folder').wrap_setting('certificates_preview_media_folder'),
-		'webroot' => wrap_setting('media_internal_path').wrap_setting('certificates_preview_media_folder'),
+		'root' => wrap_setting('media_folder').wrap_setting('certificates_preview_media_folder').'/',
+		'webroot' => wrap_setting('media_internal_path').wrap_setting('certificates_preview_media_folder').'/',
 		'field1' => 'identifier', 
 		'string2' => '.jpeg'
 	];
+	$zz['fields'][15]['optional_image'] = true;
 	$zz['fields'][15]['input_filetypes'] = ['jpeg', 'tiff', 'gif', 'png'];
 	
 	$zz['fields'][15]['image'][0]['title'] = 'gro&szlig;';
