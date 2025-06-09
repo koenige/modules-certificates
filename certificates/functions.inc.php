@@ -58,7 +58,7 @@ function mf_certificates_imagesize($element) {
  * @param object $pdf
  * @param array $element
  *		width, height
- *		center, left, right, top, bottom	
+ *		center, left, right, top, bottom, middle
  * @return array
  */
 function mf_certificates_position($pdf, $element) {
@@ -82,7 +82,14 @@ function mf_certificates_position($pdf, $element) {
 	}
 	
 	// y: top, bottom
-	if (isset($element['top'])) {
+	if (isset($element['middle'])) {
+		if (str_ends_with($element['middle'], '%')) {
+			$element['pos_y'] = $page_height * (substr($element['middle'], 0, -1) / 100) - .5 * $element['height'];
+		} else {
+			$element['middle'] = mf_certificates_val($element['middle']);
+			$element['pos_y'] = $element['middle'] - .5 * $element['height'];
+		}
+	} elseif (isset($element['top'])) {
 		$element['top'] = mf_certificates_val($element['top']);
 		$element['pos_y'] = $element['top'];
 	} elseif (isset($element['bottom'])) {
