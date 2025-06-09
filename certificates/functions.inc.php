@@ -36,6 +36,8 @@ function mf_certificates_image(&$pdf, $element) {
 function mf_certificates_imagesize($element) {
 	$size = getimagesize($element['filename']);
 	$image_ratio = $size[0] / $size[1];
+	$element['width'] = mf_certificates_val($element['width']);
+	$element['height'] = mf_certificates_val($element['height']);
 	if ($image_ratio < 1) {
 		$element['width'] = round($element['width'] * $image_ratio, 2);
 		$element['height'] = $element['height'];
@@ -68,18 +70,23 @@ function mf_certificates_position($pdf, $element) {
 		if (str_ends_with($element['center'], '%')) {
 			$element['pos_x'] = $page_width * (substr($element['center'], 0, -1) / 100) - .5 * $element['width'];
 		} else {
+			$element['center'] = mf_certificates_val($element['center']);
 			$element['pos_x'] = $element['center'] - .5 * $element['width'];
 		}
 	} elseif (isset($element['left'])) {
+		$element['left'] = mf_certificates_val($element['left']);
 		$element['pos_x'] = $element['left'];
 	} elseif (isset($element['right'])) {
+		$element['right'] = mf_certificates_val($element['right']);
 		$element['pos_x'] = $page_width - $element['right'] - $element['width'];
 	}
 	
 	// y: top, bottom
 	if (isset($element['top'])) {
+		$element['top'] = mf_certificates_val($element['top']);
 		$element['pos_y'] = $element['top'];
 	} elseif (isset($element['bottom'])) {
+		$element['bottom'] = mf_certificates_val($element['bottom']);
 		$element['pos_y'] = $page_height - $element['bottom'] - $element['height'];
 	}
 	return $element;
