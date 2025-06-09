@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014-2024 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014-2025 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -93,11 +93,11 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	$sql = sprintf($sql, $event['certificate_id']);
 	$event['elements'] = wrap_db_fetch($sql, 'certificateelement_id');
 	$param_fields = ['parameters','category_parameters'];
-	foreach ($event['elements'] as $id => &$element) {
+	foreach ($event['elements'] as $id => $element) {
 		foreach ($param_fields as $param_field) {
 			if (!$element[$param_field]) continue;
 			parse_str($element[$param_field], $element_params);
-			$element = array_merge($element, $element_params);
+			$event['elements'][$id] = array_merge($event['elements'][$id], $element_params);
 		}
 	}
 
@@ -308,6 +308,16 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 				$element['filename'] = $event['filename'];
 				$element['extension'] = $event['extension'];
 				mf_certificates_image($pdf, $element);
+				break;
+			case 'place-date':
+				$text = sprintf('%s, %s', $event['place'], $event['date_of_certificate']);
+				mf_certificates_text($pdf, $element, $event, $text);
+				break;
+			case 'signature-left':
+				mf_certificates_text($pdf, $element, $event, $event['signature_left']);
+				break;
+			case 'signature-right':
+				mf_certificates_text($pdf, $element, $event, $event['signature_right']);
 				break;
 			}
 		}

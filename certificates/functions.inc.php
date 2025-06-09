@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2022-2023 Gustaf Mossakowski
+ * @copyright Copyright © 2022-2023, 2025 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -47,13 +47,16 @@ function mf_certificates_imagesize($element) {
 }
 
 /**
- * get x, y, width and height for element
+ * get pos_x, pos_y for element
  *
  *	// center = 50%
  *	// bottom = 44
  *	// width = 98
  *	// height = 98
+ * @param object $pdf
  * @param array $element
+ *		width, height
+ *		center, left, right, top, bottom	
  * @return array
  */
 function mf_certificates_position($pdf, $element) {
@@ -80,6 +83,32 @@ function mf_certificates_position($pdf, $element) {
 		$element['pos_y'] = $page_height - $element['bottom'] - $element['height'];
 	}
 	return $element;
+}
+
+/**
+ * position a text
+ *
+ * @param object $pdf
+ * @param array $element
+ * @param array $event
+ * @param string $text
+ */
+function mf_certificates_text(&$pdf, $element, $event, $text) {
+	$element = mf_certificates_position($pdf, $element);
+	
+	$font_size = mf_certificates_val($element['font-size']
+		?? wrap_setting('certificates_font_size'));
+	$pdf->setFont($event['font_regular'], '', $font_size);
+
+	$left = mf_certificates_val($element['left']);
+	$top = mf_certificates_val($element['top']);
+	$pdf->SetXY($left, $top);
+
+	$width = mf_certificates_val($element['width']);
+	$height = mf_certificates_val($element['height'])
+		?? round($font_size * wrap_setting('certificates_line_height'));
+	$align = mf_certificates_align($element['text-align']) ?? ''; // standard is left
+	$pdf->Cell($width, $height, $text, 0, 2, $align); 
 }
 
 /**
@@ -120,3 +149,29 @@ function mf_certificates_balance_text($text, $max_len, $len_per_row) {
 	if (empty($text[0])) array_shift($text); // if first string too long
 	return $text;
 }
+
+/**
+ * convert values into pt
+ *
+ * @param string $value
+ * @return int
+ */
+function mf_certificates_val($value) {
+	if (str_ends_with($value, 'pt')) $value = substr($value, 0, -2);
+	return intval($value);
+}
+
+/**
+ * return value for text alignment
+ *
+ * @param string $value
+ * @return string
+ */
+function mf_certificates_align($value) {
+	switch ($value) {
+		case 'center': return 'C';
+		case 'right': return 'R';
+		default: case 'left': return 'L';
+	}
+}
+
