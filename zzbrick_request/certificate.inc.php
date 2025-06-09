@@ -89,7 +89,8 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	    LEFT JOIN media
 	    	ON certificateelements.element_medium_id = media.medium_id
 		LEFT JOIN filetypes AS o_mime USING (filetype_id)
-	    WHERE certificate_id = %d';
+	    WHERE certificate_id = %d
+	    ORDER BY categories.sequence';
 	$sql = sprintf($sql, $event['certificate_id']);
 	$event['elements'] = wrap_db_fetch($sql, 'certificateelement_id');
 	$param_fields = ['parameters','category_parameters'];
@@ -300,9 +301,11 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	}
 	foreach ($data as $line) {
 		$pdf->addPage();
-		$pdf = cms_urkunde_out($pdf, $event, $line, $vorlagen, $type);
 		foreach ($event['elements'] as $element) {
 			switch ($element['type']) {
+			case 'image':
+				mf_certificates_image($pdf, $element);
+				break;
 			case 'logo':
 				if (!$event['filename']) break;
 				$element['filename'] = $event['filename'];
@@ -321,6 +324,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 				break;
 			}
 		}
+		$pdf = cms_urkunde_out($pdf, $event, $line, $vorlagen, $type);
 	}
 
 	$folder = wrap_setting('tmp_dir').'/urkunden/'.$event['identifier'];
