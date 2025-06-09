@@ -39,11 +39,11 @@ function mf_certificates_imagesize($element) {
 	$element['width'] = mf_certificates_val($element['width']);
 	$element['height'] = mf_certificates_val($element['height']);
 	if ($image_ratio < 1) {
-		$element['width'] = round($element['width'] * $image_ratio, 2);
+		$element['width'] = round($element['height'] * $image_ratio, 2);
 		$element['height'] = $element['height'];
 	} else {
 		$element['width'] = $element['width'];
-		$element['height'] = round($element['height'] / $image_ratio, 2);
+		$element['height'] = round($element['width'] / $image_ratio, 2);
 	}
 	return $element;
 }
