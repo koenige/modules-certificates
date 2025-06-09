@@ -8,7 +8,7 @@
  * http://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014, 2019-2023 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014, 2019-2023, 2025 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -20,23 +20,25 @@ $zz['fields'][1]['title'] = 'ID';
 $zz['fields'][1]['field_name'] = 'certificate_id';
 $zz['fields'][1]['type'] = 'id';
 
-$zz['fields'][15]['title'] = 'Preview';
-$zz['fields'][15]['field_name'] = 'bild';
-$zz['fields'][15]['type'] = 'upload_image';
-$zz['fields'][15]['path'] = [
-	'root' => wrap_setting('media_folder').'/urkunden/',
-	'webroot' => wrap_setting('media_internal_path').'/urkunden/',
-	'field1' => 'identifier', 
-	'string2' => '.jpeg'
-];
-$zz['fields'][15]['input_filetypes'] = ['jpeg', 'tiff', 'gif', 'png'];
-
-$zz['fields'][15]['image'][0]['title'] = 'gro&szlig;';
-$zz['fields'][15]['image'][0]['field_name'] = 'gross';
-$zz['fields'][15]['image'][0]['width'] = 298; 
-$zz['fields'][15]['image'][0]['height'] = 421;
-$zz['fields'][15]['image'][0]['action'] = 'thumbnail';
-$zz['fields'][15]['image'][0]['path'] = $zz['fields'][15]['path'];
+if (wrap_setting('certificates_preview_media_folder')) {
+	$zz['fields'][15]['title'] = 'Preview';
+	$zz['fields'][15]['field_name'] = 'bild';
+	$zz['fields'][15]['type'] = 'upload_image';
+	$zz['fields'][15]['path'] = [
+		'root' => wrap_setting('media_folder').wrap_setting('certificates_preview_media_folder'),
+		'webroot' => wrap_setting('media_internal_path').wrap_setting('certificates_preview_media_folder'),
+		'field1' => 'identifier', 
+		'string2' => '.jpeg'
+	];
+	$zz['fields'][15]['input_filetypes'] = ['jpeg', 'tiff', 'gif', 'png'];
+	
+	$zz['fields'][15]['image'][0]['title'] = 'gro&szlig;';
+	$zz['fields'][15]['image'][0]['field_name'] = 'gross';
+	$zz['fields'][15]['image'][0]['width'] = 298; 
+	$zz['fields'][15]['image'][0]['height'] = 421;
+	$zz['fields'][15]['image'][0]['action'] = 'thumbnail';
+	$zz['fields'][15]['image'][0]['path'] = $zz['fields'][15]['path'];
+}
 
 $zz['fields'][2]['title'] = 'Certificate';
 $zz['fields'][2]['field_name'] = 'certificate';
