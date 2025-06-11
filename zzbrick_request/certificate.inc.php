@@ -144,6 +144,10 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	$event['obertitel'] = '';
 	$event['obertitel_dativ'] = '';
 	$event['vereinsprefix'] = '';
+	// @todo check why this is wrong, i. e. can have a slash:
+	if ($event['series_path'] AND $pos = strrpos($event['series_path'], '/'))
+		$event['series_path'] = substr($event['series_path'], $pos + 1);
+
 	switch ($event['main_series_path']) {
 	case 'dem':
 		$event['titel'] = 'Deutsche Einzelmeisterschaft';
