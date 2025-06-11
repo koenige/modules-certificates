@@ -6,7 +6,9 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 	$pdf->SetXY(10, 430);
 	$pdf->setFont($turnier['font_bold'], '', 20);
 	$pdf->Cell(575, 22, $turnier['obertitel'], 0, 2, 'C');
-	$pdf->Cell(575, 22, $turnier['titel'], 0, 2, 'C');
+	$titles = mf_certificates_balance_text($turnier['titel'], 20, 20);
+	foreach ($titles as $title)
+		$pdf->Cell(575, 22, $title, 0, 2, 'C');
 	$pdf->setFont($turnier['font_regular'], '', 18);
 	$pdf->Cell(575, 22, $turnier['untertitel'], 0, 2, 'C'); 
 
@@ -36,7 +38,7 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 		}
 		$pdf->SetXY($abstand_links, $abstand_oben);
 		
-		$line['spieler'] = mf_certificates_balance_text($line['spieler'], 40, 36);
+		$line['spieler'] = mf_certificates_balance_text($line['spieler'], 23, 18);
 		foreach ($line['spieler'] as $spieler) {
 			$pdf->Cell(405, 28, $spieler, 0, 2, 'C');
 		}

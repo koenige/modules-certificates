@@ -7,8 +7,6 @@
 
 function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 
-	$pdf->image($vorlagen.'/152b-Urkunde.jpg', 25, 10, 546, 818);
-
 	$pdf->SetXY(168, 375);
 	if (empty($turnier['titel_dativ'])) {
 		$pdf->setFont($turnier['font_bold'], '', 20);
@@ -82,14 +80,6 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 		}
 		$pdf->Cell(300, 34, $line['textzeile'], 0, 0, 'C');
 	}
-
-// Fuß		
-	$pdf->setFont($turnier['font_regular'], '', 11);
-	$pdf->SetXY(295, 630);
-	$pdf->Cell(185, 15, $turnier['place'].', '.$turnier['date_of_certificate'], 0, 2, 'C'); 
-	$pdf->SetXY(295, 690);
-	$pdf->Cell(90, 15, $turnier['signature_left'], 0, 0, 'C'); 
-	$pdf->Cell(90, 15, $turnier['signature_right'], 0, 2, 'C');
 
 	return $pdf;
 }
