@@ -213,7 +213,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	}
 
 	// Teams?
-	if ($event['event_category'] === 'mannschaft') {
+	if (wrap_setting('tournaments_type_team')) {
 		$sql = 'SELECT teams.team_id
 				, CONCAT(team, IFNULL(CONCAT(" ", team_no), "")) AS spieler
 				, (SELECT
@@ -272,8 +272,8 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			break;
 		} 
 	}
-
-	if ($event['event_category'] === 'einzel') {
+	
+	if (wrap_setting('tournaments_type_single')) {
 		$i = 1;
 		foreach ($data as $person_id => $person) {
 			if ($type === 'platz' AND !empty($filter['kennung'])) {
