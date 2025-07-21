@@ -11,12 +11,12 @@
 <h1>Urkunden
 <br><a href="../">%%% item event %%% %%% item duration wrap_date %%%</a></h1>
 
-%%% if keine_spieler %%%
+%%% if no_participants %%%
 <p class="note"><strong>Hinweis:</strong> Es sind noch keine Spieler bei dem Turnier eingetragen.</p>
 
 %%% else %%%
 <ul>
-%%% loop start %%%
+%%% loop events %%%
 <li><a href="../../../%%% item identifier %%%/urkunden/teilnahme.pdf">%%% item event %%%</a>
 %%% loop platz %%%
  | <a href="../../../%%% item identifier %%%/urkunden/platz%%% item bereich "-%s" %%%.pdf">%%% item event %%% %%% item bereich "(%s)" %%% mit Plätzen</a>

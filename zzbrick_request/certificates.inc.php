@@ -8,12 +8,12 @@
  * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014-2022, 2024 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014-2022, 2024-2025 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
 
-function mod_certificates_certificates($params) {
+function mod_certificates_certificates($params, $setting, $data) {
 	if (count($params) !== 2) return false;
 	
 	$sql = 'SELECT events.event_id, events.identifier, events.event
@@ -24,7 +24,6 @@ function mod_certificates_certificates($params) {
 				AND event_id = events.event_id) AS spezialurkunden
 			, IFNULL(place, places.contact) AS place
 			, tournaments.tabellenstaende
-			, IF(main_series.category = "Reihen", series.category, main_series.category) AS series
 		FROM events
 		LEFT JOIN tournaments USING (event_id)
 		JOIN participations
@@ -50,54 +49,26 @@ function mod_certificates_certificates($params) {
 		, wrap_db_escape($params[1]), $params[0]
 		, wrap_db_escape($params[1]), $params[0]
 	);
-	$data = wrap_db_fetch($sql, 'event_id');
-	if (!$data) {
-		$sql = 'SELECT events.event_id, events.identifier, events.event
-				, IFNULL(events.event_year, YEAR(events.date_begin)) AS year
-				, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS duration
-				, IFNULL(place, places.contact) AS place
-			FROM events
-			LEFT JOIN events_contacts events_places
-				ON events.event_id = events_places.event_id
-				AND events_places.role_category_id = /*_ID categories roles/location _*/
-				AND events_places.sequence = 1
-			LEFT JOIN contacts places
-				ON events_places.contact_id = places.contact_id
-			LEFT JOIN addresses
-				ON events_places.contact_id = addresses.contact_id
-			WHERE events.identifier = "%d/%s"
-		';
-		$sql = sprintf($sql, $params[0], wrap_db_escape($params[1]));
-		$data = wrap_db_fetch($sql);
-		$data['keine_spieler'] = true;
-		$event['duration'] = $data['duration'];
-		$event['year'] = $data['year'];
+	$data['events'] = wrap_db_fetch($sql, 'event_id');
+
+	if (!$data['events']) {
+		$data['no_participants'] = true;
 	} else {
-		foreach ($data as $event_id => $turnier) {
-			$data[$event_id]['platz'][] = ['bereich' => ''];
-			if ($turnier['tabellenstaende']) {
-				$tabellenstaende = explode(',', $turnier['tabellenstaende']);
-				if ($tabellenstaende) {
-					foreach ($tabellenstaende as $tabellenstand) {
-						if (!$tabellenstand) continue;
-						$data[$event_id]['platz'][] = ['bereich' => $tabellenstand];
-					}
-				}
+		foreach ($data['events'] as $event_id => $event) {
+			if ($event['spezialurkunden'] === '0')
+				$data['events'][$event_id]['spezialurkunden'] = NULL;
+			$data['events'][$event_id]['platz'][] = ['bereich' => ''];
+			if (!$event['tabellenstaende']) continue;
+			$tabellenstaende = explode(',', $event['tabellenstaende']);
+			foreach ($tabellenstaende as $tabellenstand) {
+				if (!$tabellenstand) continue;
+				$data['events'][$event_id]['platz'][] = ['bereich' => $tabellenstand];
 			}
 		}
-	
-		$event = reset($data);
-		if (count($data) > 1) {
-			$data['event'] = $event['series'];
-		} else {
-			$data['event'] = $event['event'];
-		}
-		$data['duration'] = $event['duration'];
-		$data['place'] = $event['place'];
 	}
 
 	$page['text'] = wrap_template('certificates', $data);
-	$page['title'] = 'Urkunden '.$data['event'].', '.wrap_date($event['duration']);
+	$page['title'] = 'Urkunden '.$data['event'].', '.wrap_date($data['duration']);
 	$page['breadcrumbs'][]['title'] = 'Urkunden';
 	$page['dont_show_h1'] = true;
 	return $page;
