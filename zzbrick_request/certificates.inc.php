@@ -31,8 +31,6 @@ function mod_certificates_certificates($params, $setting, $data) {
 			AND participations.usergroup_id = /*_ID usergroups spieler _*/
 		LEFT JOIN categories series
 			ON events.series_category_id = series.category_id
-		LEFT JOIN categories main_series
-			ON main_series.category_id = series.main_category_id
 		LEFT JOIN events_contacts events_places
 			ON events.event_id = events_places.event_id
 			AND events_places.role_category_id = /*_ID categories roles/location _*/
@@ -41,14 +39,10 @@ function mod_certificates_certificates($params, $setting, $data) {
 			ON events_places.contact_id = places.contact_id
 		LEFT JOIN addresses
 			ON events_places.contact_id = addresses.contact_id
-		WHERE (main_series.path = "reihen/%s" OR events.identifier = "%d/%s")
-		AND IFNULL(events.event_year, YEAR(events.date_begin)) = %d
+		WHERE main_event_id = %d OR events.event_id = %d
 		ORDER BY series.sequence, events.date_begin, events.identifier
 	';
-	$sql = sprintf($sql
-		, wrap_db_escape($params[1]), $params[0]
-		, wrap_db_escape($params[1]), $params[0]
-	);
+	$sql = sprintf($sql, $data['event_id'], $data['event_id']);
 	$data['events'] = wrap_db_fetch($sql, 'event_id');
 
 	if (!$data['events']) {
