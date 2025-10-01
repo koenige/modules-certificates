@@ -8,7 +8,7 @@
  * http://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2021-2024 Gustaf Mossakowski
+ * @copyright Copyright © 2021-2025 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -96,7 +96,7 @@ $zz['sql'] = 'SELECT events_certificates.*
 $zz['sqlorder'] = ' ORDER BY events.date_begin DESC, events.time_begin DESC,
 	events.identifier';
 
-$zz['subtitle']['event_id']['sql'] = 'SELECT event
+$zz['subtitle']['event_id']['sql'] = 'SELECT event_id, event
 	, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS duration
 	FROM events';
 $zz['subtitle']['event_id']['var'] = ['event', 'duration'];
