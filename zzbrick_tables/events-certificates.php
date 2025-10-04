@@ -25,7 +25,7 @@ $zz['fields'][2]['type'] = 'write_once';
 $zz['fields'][2]['type_detail'] = 'select';
 $zz['fields'][2]['sql'] = 'SELECT event_id, date_begin, event
 	FROM events
-	WHERE ISNULL(main_event_id)
+	WHERE event_category_id = /*_ID categories event/event _*/
 	ORDER BY event';
 $zz['fields'][2]['display_field'] = 'event';
 $zz['fields'][2]['search'] = 'CONCAT(events.event, " ", IFNULL(event_year, YEAR(date_begin)))';
