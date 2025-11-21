@@ -106,7 +106,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	if (!isset($event['turnierzahl'])) {
 		$event['turnierzahl'] = false;
 	}
-	$event['date_of_certificate'] = ltrim(wrap_date($event['date_of_certificate'], 'dates-de-long'), '0');
+	$event['date_of_certificate'] = ltrim(wrap_date_plain($event['date_of_certificate'], 'dates-de-long'), '0');
 
 	// Urkundentyp
 	$type = $params[2];
