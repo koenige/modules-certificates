@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014-2025 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014-2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -75,8 +75,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		unset($event['tournament_parameter']);
 		$event = array_merge($parameter, $event);
 	}
-	if (!isset($event['platzurkunden']))
-		$event['platzurkunden'] = wrap_setting('platzurkunden');
 
 	$sql = 'SELECT certificateelement_id
 			, categories.category
@@ -112,6 +110,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	$type = $params[2];
 	$possible_types = ['teilnahme', 'spezial', 'platz'];
 	if ($event['tabellenstaende']) {
+		// @todo currently, only 'w' for female is supported
 		$tabellenstaende = explode(',', $event['tabellenstaende']);
 		foreach ($tabellenstaende as $tabellenstand) {
 			if (!$tabellenstand) continue;
@@ -121,18 +120,21 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	if (!in_array($type, $possible_types)) return false;
 	$where = [];
 	$filter_kennung = '';
-	if ($type === 'spezial') {
-		$where[] = 'NOT ISNULL(urkundentext)';
-	} elseif (substr($type, 0, 6) === 'platz-') {
-		$filter_kennung = substr($type, 6);
-		if (isset($event['platzurkunden_'.$filter_kennung])) {
-			$event['platzurkunden'] = $event['platzurkunden_'.$filter_kennung];
-		}
-		if ($filter_kennung === 'w') $event['weiblich'] = true;
-		$type = 'platz';
+	switch ($type) {
+		case 'spezial':
+			$where[] = 'urkundentext IS NOT NULL';
+			break;
+		case 'platz-w':
+			$filter_kennung = 'w';
+			if (wrap_setting('certificates_placement_count_female'))
+				wrap_setting('certificates_placement_count', wrap_setting('certificates_placement_count_female'));
+			$event['weiblich'] = true;
+			$type = 'platz';
+			break;
 	}
 	if ($type === 'platz') {
-		$order_by_limit = sprintf('ORDER BY platz_no, t_nachname, t_vorname LIMIT %d ', $event['platzurkunden']);
+		$order_by_limit = 'ORDER BY platz_no, t_nachname, t_vorname
+			LIMIT /*_SETTING certificates_placement_count _*/; ';
 	} else {
 		$order_by_limit = 'ORDER BY t_nachname, t_vorname, contact_id';
 	}

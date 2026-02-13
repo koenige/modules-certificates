@@ -6,7 +6,7 @@
  * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2022, 2024 Gustaf Mossakowski
+ * @copyright Copyright © 2022, 2024, 2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -29,3 +29,7 @@
 /* 2022-06-08-13 */	INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Signature, right', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/signature-right', '&alias=certificate-element/signature-right&type=signature-right', 8, NOW());
 /* 2024-08-24-1 */	UPDATE webpages SET content = REPLACE(content, '%%% request urkunde *', '%%% request certificate *'), identifier = CONCAT(identifier, '.pdf') WHERE content LIKE '%\%\%\% request urkunde *%';
 /* 2024-08-24-2 */	UPDATE webpages SET content = REPLACE(content, '%%% request urkunden ', '%%% request certificates ') WHERE content LIKE '%\%\%\% request urkunden %';
+/* 2026-02-13-1 */	UPDATE _settings SET setting_key = 'certificates_placement_count' WHERE setting_key = 'platzurkunden';
+/* 2026-02-13-2 */	UPDATE tournaments SET urkunde_parameter = CONCAT('&', urkunde_parameter) WHERE urkunde_parameter IS NOT NULL AND SUBSTRING(urkunde_parameter, 1, 1) != '&';
+/* 2026-02-13-3 */	UPDATE tournaments SET urkunde_parameter = REPLACE(urkunde_parameter, '&platzurkunden=', '&certificates_placement_count=') WHERE urkunde_parameter LIKE '%&platzurkunden=%';
+/* 2026-02-13-4 */	UPDATE tournaments SET urkunde_parameter = REPLACE(urkunde_parameter, '&platzurkunden_w=', '&certificates_placement_count_female=') WHERE urkunde_parameter LIKE '%&platzurkunden_w=%';
