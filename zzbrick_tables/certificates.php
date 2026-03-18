@@ -8,7 +8,7 @@
  * http://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2008, 2012, 2014, 2019-2023, 2025 Gustaf Mossakowski
+ * @copyright Copyright © 2008, 2012, 2014, 2019-2023, 2025-2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -26,7 +26,7 @@ if (wrap_setting('certificates_preview_media_folder')) {
 	$zz['fields'][15]['type'] = 'upload_image';
 	$zz['fields'][15]['path'] = [
 		'root' => wrap_setting('media_folder').wrap_setting('certificates_preview_media_folder').'/',
-		'webroot' => wrap_setting('media_internal_path').wrap_setting('certificates_preview_media_folder').'/',
+		'webroot' => wrap_path('media_internal_folder', wrap_setting('certificates_preview_media_folder')),
 		'field1' => 'identifier', 
 		'string2' => '.jpeg'
 	];
