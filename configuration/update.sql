@@ -33,3 +33,5 @@
 /* 2026-02-13-2 */	UPDATE tournaments SET urkunde_parameter = CONCAT('&', urkunde_parameter) WHERE urkunde_parameter IS NOT NULL AND SUBSTRING(urkunde_parameter, 1, 1) != '&';
 /* 2026-02-13-3 */	UPDATE tournaments SET urkunde_parameter = REPLACE(urkunde_parameter, '&platzurkunden=', '&certificates_placement_count=') WHERE urkunde_parameter LIKE '%&platzurkunden=%';
 /* 2026-02-13-4 */	UPDATE tournaments SET urkunde_parameter = REPLACE(urkunde_parameter, '&platzurkunden_w=', '&certificates_placement_count_female=') WHERE urkunde_parameter LIKE '%&platzurkunden_w=%';
+/* 2026-03-18-1 */	DELETE FROM _settings WHERE setting_key = 'certificates_templates_path';
+/* 2026-03-18-2 */	DELETE FROM _settings WHERE setting_key = 'certificates_event_edit_path';
