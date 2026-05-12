@@ -20,15 +20,19 @@ $zz['fields'][1]['title'] = 'ID';
 $zz['fields'][1]['field_name'] = 'certificate_id';
 $zz['fields'][1]['type'] = 'id';
 
-if (wrap_setting('certificates_preview_media_folder')) {
+if (wrap_path('certificates_preview_file', '', ['testing' => 1])) {
 	$zz['fields'][15]['title'] = 'Preview';
 	$zz['fields'][15]['field_name'] = 'bild';
 	$zz['fields'][15]['type'] = 'upload_image';
 	$zz['fields'][15]['path'] = [
-		'root' => wrap_setting('media_folder').wrap_setting('certificates_preview_media_folder').'/',
-		'webroot' => wrap_path('media_internal_folder', wrap_setting('certificates_preview_media_folder')),
-		'field1' => 'identifier', 
-		'string2' => '.jpeg'
+		'root' => wrap_setting('certificates_preview_dir').'/',
+		'field1' => 'identifier',
+		'string2' => '.',
+		'string3' => 'jpeg'
+	];
+	$zz['fields'][15]['link'] = [
+		'area' => 'certificates_preview_file',
+		'fields' => ['identifier']
 	];
 	$zz['fields'][15]['optional_image'] = true;
 	$zz['fields'][15]['input_filetypes'] = ['jpeg', 'tiff', 'gif', 'png'];
