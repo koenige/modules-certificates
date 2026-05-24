@@ -30,7 +30,7 @@ if (wrap_path('certificates_preview_file', '', ['testing' => 1])) {
 		'string2' => '.',
 		'string3' => 'jpeg'
 	];
-	$zz['fields'][15]['link'] = [
+	$zz['fields'][15]['path_web'] = [
 		'area' => 'certificates_preview_file',
 		'fields' => ['identifier']
 	];
