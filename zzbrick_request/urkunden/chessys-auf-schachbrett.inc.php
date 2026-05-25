@@ -2,10 +2,6 @@
 
 function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
-	$pdf->setFont($turnier['font_regular'], '', 90);
-	$pdf->SetXY(10, 340);
-	$pdf->Cell(575, 85, 'Urkunde', 0, 0, 'C');
-
 // Turniername
 	$pdf->SetXY(10, 425);
 	$pdf->setFont($turnier['font_regular'], '', 20);
