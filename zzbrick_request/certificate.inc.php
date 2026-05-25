@@ -317,6 +317,10 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 				$element['extension'] = $event['extension'];
 				mf_certificates_image($pdf, $element);
 				break;
+			case 'textblock':
+				if (empty($element['text'])) break;
+				mf_certificates_text($pdf, $element, $event, $element['text']);
+				break;
 			}
 		}
 		$pdf = cms_urkunde_out($pdf, $event, $line, $type);
