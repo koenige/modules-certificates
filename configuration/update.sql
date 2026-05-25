@@ -36,3 +36,9 @@
 /* 2026-03-18-1 */	DELETE FROM _settings WHERE setting_key = 'certificates_templates_path';
 /* 2026-03-18-2 */	DELETE FROM _settings WHERE setting_key = 'certificates_event_edit_path';
 /* 2026-05-13-1 */	DELETE FROM _settings WHERE setting_key = 'certificates_preview_media_folder';
+/* 2026-05-26-1 */	INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Textblock', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/textblock', '&alias=certificate-element/textblock&type=textblock', 2, NOW());
+/* 2026-05-26-2 */	INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Placement', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/placement', '&alias=certificate-element/placement&type=placement', 6, NOW());
+/* 2026-05-26-3 */	UPDATE categories SET path = 'certificate-element/place-date' WHERE path = 'ertificate-element/place-date';
+/* 2026-05-26-4 */	UPDATE categories SET sequence = 7 WHERE path = 'certificate-element/place-date';
+/* 2026-05-26-5 */	UPDATE categories SET sequence = 8 WHERE path = 'certificate-element/signature-left';
+/* 2026-05-26-6 */	UPDATE categories SET sequence = 9 WHERE path = 'certificate-element/signature-right';

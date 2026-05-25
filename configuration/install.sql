@@ -6,7 +6,7 @@
  * http://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2020-2022 Gustaf Mossakowski
+ * @copyright Copyright © 2020-2022, 2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -41,12 +41,14 @@ INSERT INTO _relations (`master_db`, `master_table`, `master_field`, `detail_db`
 INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Certificate Element', NULL, NULL, NULL, 'certificate-element', '&alias=certificate-element', NULL, NOW());
 INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Image', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/image', '&alias=certificate_element/image&type=image', 1, NOW());
 INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Logo', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/logo', '&alias=certificate_element/logo&type=logo', NULL, NOW());
+INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Textblock', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/textblock', '&alias=certificate-element/textblock&type=textblock', 2, NOW());
 INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Event', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/event', '&alias=certificate_element/event&type=event', 3, NOW());
 INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Name', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/name', '&alias=certificate_element/name&type=name', 4, NOW());
 INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Organisation', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/organisation', '&alias=certificate_element/organisation&type=organisation', 5, NOW());
-INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Place & Date', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'ertificate-element/place-date', '&alias=certificate-element/place-date&type=place-date', 6, NOW());
-INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Signature, left', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/signature-left', '&alias=certificate-element/signature-left&type=signature-left', 7, NOW());
-INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Signature, right', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/signature-right', '&alias=certificate-element/signature-right&type=signature-right', 8, NOW());
+INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Placement', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/placement', '&alias=certificate-element/placement&type=placement', 6, NOW());
+INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Place & Date', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/place-date', '&alias=certificate-element/place-date&type=place-date', 7, NOW());
+INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Signature, left', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/signature-left', '&alias=certificate-element/signature-left&type=signature-left', 8, NOW());
+INSERT INTO categories (`category`, `category_short`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Signature, right', NULL, NULL, (SELECT category_id FROM categories c WHERE path = 'certificate-element'), 'certificate-element/signature-right', '&alias=certificate-element/signature-right&type=signature-right', 9, NOW());
 
 CREATE TABLE `events_certificates` (
   `event_certificate_id` int unsigned NOT NULL AUTO_INCREMENT,
