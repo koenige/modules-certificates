@@ -317,6 +317,12 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 				$element['extension'] = $event['extension'];
 				mf_certificates_image($pdf, $element);
 				break;
+			}
+		}
+		$pdf = cms_urkunde_out($pdf, $event, $line, $type);
+		$pdf->SetAutoPageBreak(false);
+		foreach ($event['elements'] as $element) {
+			switch ($element['type']) {
 			case 'place-date':
 				$text = sprintf('%s, %s', $event['place'], $event['date_of_certificate']);
 				mf_certificates_text($pdf, $element, $event, $text);
@@ -329,7 +335,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 				break;
 			}
 		}
-		$pdf = cms_urkunde_out($pdf, $event, $line, $type);
+		$pdf->SetAutoPageBreak(true);
 	}
 
 	$folder = wrap_setting('tmp_dir').'/urkunden/'.$event['identifier'];
@@ -361,4 +367,3 @@ function mf_certificates_subtitle_dsm(&$title) {
 	}
 	return implode(' ', $glue);
 }
-
