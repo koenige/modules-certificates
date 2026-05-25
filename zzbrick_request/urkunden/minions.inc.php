@@ -63,11 +63,5 @@ function cms_urkunde_out($pdf, $turnier, $line, $type) {
 		$pdf->Cell(145, 44, $line['textzeile'], 0, 0, 'C'); 
 	}
 
-// Fuß
-	$pdf->setFont($turnier['font_regular'], '', 14);
-	$pdf->text(140, 710, $turnier['place'].', '.$turnier['date_of_certificate']); 
-	$pdf->text(105, 790, $turnier['signature_left']); 
-	$pdf->text(260, 790, $turnier['signature_right']);
-
 	return $pdf;
 }
