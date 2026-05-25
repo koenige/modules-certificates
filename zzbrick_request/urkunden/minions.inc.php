@@ -1,8 +1,6 @@
 <?php
 
-function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
-
-	$pdf->image($vorlagen.'/384-Minions-Urkunde.jpg', 25, 20, 544, 752);
+function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
 // Turniername
 	$pdf->SetXY(10, 420);

@@ -1,8 +1,6 @@
 <?php
 
-function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
-
-	$pdf->image($vorlagen.'/Urkunde-1999-bunt.jpg', 31, 20, 533, 350);
+function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
 // Abstand von oben
 	$line['verein'] = mf_certificates_balance_text($line['verein'], 44, 36);

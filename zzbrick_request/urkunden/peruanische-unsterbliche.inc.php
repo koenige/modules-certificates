@@ -1,9 +1,6 @@
 <?php
 
-function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
-
-	$pdf->image($vorlagen.'/Peruanische-Unsterbliche.png', 98, 40, 400, 400);
-	$pdf->image($vorlagen.'/209-Chessy mit Pokal und Lorbeer.png', 440, 610, 120, 197);
+function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
 // Turniername
 	$pdf->SetXY(10, 450);

@@ -1,8 +1,6 @@
 <?php
 
-function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
-
-	$pdf->image($vorlagen.'/KIKA-Urkunde-2013.png', 0, 0, 595, 842);
+function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
 // Turniername
 	$pdf->SetXY(10, 456);

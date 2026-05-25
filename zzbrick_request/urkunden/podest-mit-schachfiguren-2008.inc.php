@@ -1,8 +1,6 @@
 <?php
 
-function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
-
-	$pdf->image($vorlagen.'/210b-DEM-Urkunde.jpg', 25, 65, 544, 658);
+function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
 // Turniername
 	$pdf->SetXY(145, 200);

@@ -1,8 +1,6 @@
 <?php
 
-function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
-
-	$pdf->image($vorlagen.'/374-Dinourkunde.png', 30, 30, 532, 501);
+function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
 // Turniername
 	$pdf->SetXY(10, 536);

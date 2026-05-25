@@ -1,8 +1,6 @@
 <?php
 
-function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
-
-	$pdf->image($vorlagen.'/Urkunde Lasker.jpg', 30, 50, 535, 350);
+function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
 // Turniername
 	$pdf->SetXY(10, 430);
@@ -66,7 +64,6 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 	}
 
 // Fuß
-	$pdf->image($vorlagen.'/386-Emanuel Lasker.png', 35, 677, 99, 121);
 	$pdf->setFont($turnier['font_regular'], '', 14);
 	$pdf->text(220, 710, $turnier['place'].', '.$turnier['date_of_certificate']); 
 	$pdf->text(185, 790, $turnier['signature_left']); 

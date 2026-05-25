@@ -287,7 +287,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		}
 	}
 
-	$vorlagen = wrap_setting('media_folder').'/urkunden-grafiken';
 	wrap_lib('tfpdf');
 	require_once __DIR__.'/urkunden/'.$event['urkunde_kennung'].'.inc.php';
 	
@@ -330,7 +329,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 				break;
 			}
 		}
-		$pdf = cms_urkunde_out($pdf, $event, $line, $vorlagen, $type);
+		$pdf = cms_urkunde_out($pdf, $event, $line, $type);
 	}
 
 	$folder = wrap_setting('tmp_dir').'/urkunden/'.$event['identifier'];

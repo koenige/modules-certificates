@@ -1,8 +1,7 @@
 <?php
 
-function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
+function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
-	$pdf->image($vorlagen.'/chessy-in-duesseldorf.png', 30, 25, 535, 380);
 	$pdf->setFont($turnier['font_regular'], '', 90);
 	$pdf->SetXY(10, 405);
 	$pdf->Cell(575, 85, 'Urkunde', 0, 0, 'C');
@@ -71,7 +70,6 @@ function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
 	}
 
 // Fuß
-	$pdf->image($vorlagen.'/duesseldorfer-laeufer.png', 470, 730, 64, 72);
 	$pdf->SetXY(0, 730);
 	$pdf->setFont($turnier['font_regular'], '', 14);
 	$pdf->Cell(0, 14, $turnier['place'].', '.$turnier['date_of_certificate'], 0, 0, 'C'); 

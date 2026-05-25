@@ -1,8 +1,7 @@
 <?php
 
-function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
+function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
-	$pdf->image($vorlagen.'/Urkunde-Ivantschuk–Jussupow.jpg', 45, 62, 502, 376);
 	$pdf->setFont($turnier['font_regular'], '', 90);
 
 // Turniername

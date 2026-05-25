@@ -1,8 +1,7 @@
 <?php
 
-function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
+function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
-	$pdf->image($vorlagen.'/406-Urkunde-mit-Burg-v3.jpg', 45, 22, 502, 418);
 	$pdf->setFont($turnier['font_regular'], '', 90);
 
 // Turniername

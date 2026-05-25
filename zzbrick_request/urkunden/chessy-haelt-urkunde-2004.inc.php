@@ -5,7 +5,7 @@
 // Urkundendruck in PDF: Chessy hält Urkunde
 
 
-function cms_urkunde_out($pdf, $turnier, $line, $vorlagen, $type) {
+function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
 	$pdf->SetXY(168, 375);
 	if (empty($turnier['titel_dativ'])) {
