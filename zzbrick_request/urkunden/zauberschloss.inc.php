@@ -2,8 +2,6 @@
 
 function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
-	$pdf->setFont($turnier['font_regular'], '', 90);
-
 // Turniername
 	$pdf->SetXY(10, 465);
 	$pdf->setFont($turnier['font_regular'], '', 20);
