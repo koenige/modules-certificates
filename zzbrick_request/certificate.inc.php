@@ -37,7 +37,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			, series.category AS series
 			, tabellenstaende, alter_max AS age_max
 			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
-			, IF(events.offen = "ja", 1 , NULL) AS offen
 			, certificate_id
 			, certificates.parameters AS certificate_parameters
 			, /*_PREFIX_*/media.filename, /*_PREFIX_*/media.version
@@ -69,8 +68,10 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	}
 	if ($event['certificate_parameters'])
 		parse_str($event['certificate_parameters'], $event['p']);
-	if ($event['series_parameter'])
+	if ($event['series_parameter']) {
 		parse_str($event['series_parameter'], $event['series_parameter']);
+		wrap_match_module_parameters('series', $event['series_parameter'], false);
+	}
 	if ($event['tournament_parameter']) {
 		parse_str($event['tournament_parameter'], $parameter);
 		unset($event['tournament_parameter']);
@@ -141,7 +142,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	$where = array_merge($where, $filter['where']);
 
 	// Titel des Turniers
-	$event['obertitel'] = '';
 	$event['vereinsprefix'] = '';
 	// @todo check why this is wrong, i. e. can have a slash:
 	if ($event['series_path'] AND $pos = strrpos($event['series_path'], '/'))
@@ -155,16 +155,8 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		} elseif ($event['series_path'] === 'kika') {
 			$event['titel'] = 'Kinderschachturnier der DSJ';
 		}
-		if ($edition = wrap_setting('tournaments_edition')) {
-			$event['obertitel'] .= $edition.'. ';
-		} else {
+		if (!wrap_setting('tournaments_edition')) {
 			$event['titel'] .= ' '.$event['year'];
-		}
-		if ($event['offen']) {
-			if ($event['series_path'] === 'kika')
-				$event['obertitel'] .= 'Offenes ';
-			else
-				$event['obertitel'] .= 'Offene ';
 		}
 		break;
 	case 'dsm':
@@ -191,13 +183,12 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	case 'dlm':
 		$event['vereinsprefix'] = 'mit ';
 		$event['titel'] = $event['series'].' '.$event['year'];
-		$event['obertitel'] = '';
 		break;
 	default:
 		$event['titel'] = $event['series'].' '.$event['year'];
-		$event['obertitel'] = '';
 		break;
 	}
+	$event['obertitel'] = mf_certificates_supertitle();
 	$event['untertitel'] = mf_certificates_subtitle($event, $event['series_parameter']);
 
 	// Teams?
@@ -363,4 +354,25 @@ function mf_certificates_subtitle($event, $series) {
 		$subtitle = str_replace('{age_max}', $event['age_max'], $subtitle);
 	}
 	return $subtitle;
+}
+
+/**
+ * certificate supertitle from series parameters and tournament edition
+ *
+ * Uses `certificates_supertitle` with `{tournaments_edition}` replaced by the edition number.
+ * If no supertitle is configured but `tournaments_edition` is set, uses `{tournaments_edition}.`
+ * Without an edition, `{tournaments_edition}` and an optional following dot are removed from the template.
+ *
+ * @return string supertitle text, or empty string
+ */
+function mf_certificates_supertitle() {
+	$edition = wrap_setting('tournaments_edition');
+	$template = wrap_setting('certificates_supertitle');
+	if (!$template AND !$edition) return '';
+	if (!$template)
+		$template = '{tournaments_edition}.';
+	if ($edition)
+		return str_replace('{tournaments_edition}', $edition, $template);
+	$supertitle = preg_replace('/\s*\{tournaments_edition\}\.?/', '', $template);
+	return trim(preg_replace('/\s+/', ' ', $supertitle));
 }
