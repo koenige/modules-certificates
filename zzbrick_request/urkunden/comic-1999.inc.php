@@ -35,24 +35,19 @@ function cms_urkunde_out($pdf, $turnier, $line, $type) {
 // Platzierung/mit Erfolg teilgenommen
 	$pdf->setFont($turnier['font_regular'], '', 14);
 	$pdf->SetXY(0, $pdf->getY() + 14);
-	if (wrap_setting('tournaments_edition'))
-		$pdf->Cell(0, 18, 'hat bei der '.$turnier['obertitel_dativ'], 0, 0, 'C');
-	else
-		$pdf->Cell(0, 18, 'hat bei der', 0, 2, 'C');
-	$pdf->Cell(0, 18, $turnier['titel_dativ'], 0, 2,'C'); 
+	if ($turnier['obertitel'])
+		$pdf->Cell(0, 18, $turnier['obertitel'], 0, 0, 'C');
+	$pdf->Cell(0, 18, $turnier['titel'], 0, 2,'C'); 
 	$pdf->Cell(0, 18, $turnier['untertitel'], 0, 2, 'C');
 	if ($type === 'platz') {
-		$pdf->SetX(144);
-		$pdf->Cell(90, 44, 'den', 0, 0, 'R');
+		$pdf->SetX(158);
+		$pdf->Cell(90, 44, 'hat den', 0, 0, 'R');
 		$pdf->setFont($turnier['font_bold'], '', 18);
 		$pdf->Cell(110, 42, $line['rang'].'. Platz', 0, 0, $line['rang'] ? 'C' : 'R');
 		$pdf->setFont($turnier['font_regular'], '', 14);
 		$pdf->Cell(90, 44, 'belegt', 0, 2, 'L'); 
 	} else {
 		$pdf->setFont($turnier['font_bold'], '', 14);
-		if ($line['textzeile'] === 'hat mit Erfolg teilgenommen') {
-			$line['textzeile'] = 'mit Erfolg teilgenommen';
-		}
 		$pdf->Cell(0, 44, $line['textzeile'], 0, 2, 'C'); 
 	}
 

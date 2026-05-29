@@ -142,7 +142,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 
 	// Titel des Turniers
 	$event['obertitel'] = '';
-	$event['obertitel_dativ'] = '';
 	$event['vereinsprefix'] = '';
 	// @todo check why this is wrong, i. e. can have a slash:
 	if ($event['series_path'] AND $pos = strrpos($event['series_path'], '/'))
@@ -151,27 +150,21 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	switch ($event['main_series_path']) {
 	case 'dem':
 		$event['titel'] = 'Deutsche Einzelmeisterschaft';
-		$event['titel_dativ'] = 'Deutschen Einzelmeisterschaft';
 		if (substr($event['series_path'], 0, 4) === 'odjm') {
 			$event['titel'] = 'Deutsche Juniorenmeisterschaft';
-			$event['titel_dativ'] = 'Deutschen Juniorenmeisterschaft';
 		} elseif ($event['series_path'] === 'kika') {
 			$event['titel'] = 'Kinderschachturnier der DSJ';
-			$event['titel_dativ'] = 'Kinderschachturniers der DSJ';
 		}
 		if ($edition = wrap_setting('tournaments_edition')) {
 			$event['obertitel'] .= $edition.'. ';
-			$event['obertitel_dativ'] .= $edition.'. ';
 		} else {
 			$event['titel'] .= ' '.$event['year'];
-			$event['titel_dativ'] .= ' '.$event['year'];
 		}
 		if ($event['offen']) {
 			if ($event['series_path'] === 'kika')
 				$event['obertitel'] .= 'Offenes ';
 			else
 				$event['obertitel'] .= 'Offene ';
-			$event['obertitel_dativ'] .= 'Offenen ';
 		}
 		break;
 	case 'dsm':
@@ -188,14 +181,12 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			}
 		}
 		$event['titel'] = implode(' ', $event['titel']).' '.$event['year'];
-		$event['titel_dativ'] = str_replace('Deutsche', 'Deutschen', $event['titel']);
 		break;
 	case 'dvm':
 		$event['vereinsprefix'] = 'mit ';
 		$event['titel'] = explode(' ', $event['series']);
 		array_pop($event['titel']);
 		$event['titel'] = implode(' ', $event['titel']).' '.$event['year'];
-		$event['titel_dativ'] = str_replace('Deutsche', 'Deutschen', $event['titel']);
 		break;
 	case 'dlm':
 		$event['vereinsprefix'] = 'mit ';
