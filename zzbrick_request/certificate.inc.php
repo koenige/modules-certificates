@@ -30,13 +30,11 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 
 	// Turnier
 	// @todo ggf. Urkundenstandardtext überschreibbar machen
-	$sql = 'SELECT event_id, runden
+	$sql = 'SELECT runden
 			, place, date_of_certificate
 			, signature_left, signature_right
 			, certificates.identifier AS urkunde_kennung
-			, SUBSTRING_INDEX(series.path, "/", -1) AS series_path
 			, series.category AS series
-			, series.parameters AS series_parameter
 			, tabellenstaende, alter_max AS age_max
 			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
 			, IF(events.offen = "ja", 1 , NULL) AS offen
