@@ -2,12 +2,6 @@
 
 function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
-// Turniername
-	$pdf->SetXY(10, 406);
-	$pdf->setFont($turnier['font_bold'], '', 24);
-	$pdf->Cell(575, 28, $turnier['obertitel'], 0, 2, 'C');
-	$pdf->Cell(575, 28, $turnier['titel'], 0, 2, 'C');
-	$pdf->Cell(575, 28, $turnier['untertitel'], 0, 2, 'C'); 
 
 // Spielername
 	$line['verein'] = mf_certificates_balance_text($line['verein'], 48, 40);

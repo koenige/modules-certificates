@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2022-2023, 2025 Gustaf Mossakowski
+ * @copyright Copyright © 2022-2023, 2025-2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -97,6 +97,72 @@ function mf_certificates_position($pdf, $element) {
 		$element['pos_y'] = $page_height - $element['bottom'] - $element['height'];
 	}
 	return $element;
+}
+
+/**
+ * render certificate supertitle, title, and subtitle as a stacked block
+ *
+ * @param object $pdf
+ * @param array $element parameters: top, left, center, width, text-align, font-size,
+ *		font-weight, font-size-subtitle, font-weight-subtitle, line-height,
+ *		balance-title-max, balance-title-row
+ * @param array $event
+ */
+function mf_certificates_event(&$pdf, $element, $event) {
+	$page_width = $pdf->GetPageWidth();
+	if (empty($element['width']) && !empty($element['left']) && !empty($element['right'])) {
+		$left = mf_certificates_val($element['left']);
+		$right = mf_certificates_val($element['right']);
+		$element['width'] = $page_width - $left - $right;
+	} elseif (empty($element['width']) && !empty($element['left'])) {
+		$left = mf_certificates_val($element['left']);
+		$element['width'] = $page_width - 2 * $left;
+	} elseif (!empty($element['width'])) {
+		$element['width'] = mf_certificates_val($element['width']);
+	} else {
+		$element['width'] = $page_width;
+	}
+	$element['height'] = 1;
+	$element = mf_certificates_position($pdf, $element);
+	$pdf->SetXY($element['pos_x'], $element['pos_y']);
+
+	$align = mf_certificates_align($element['text-align'] ?? 'center');
+	$line_height = isset($element['line-height']) ? (float) $element['line-height'] : 1;
+
+	$font_size = mf_certificates_val($element['font-size']
+		?? wrap_setting('certificates_font_size'));
+	$font_size_subtitle = mf_certificates_val($element['font-size-subtitle'] ?? $font_size);
+	$font_weight = $element['font-weight'] ?? 'bold';
+	$font_weight_subtitle = $element['font-weight-subtitle'] ?? 'normal';
+
+	$lines = [];
+	$lines[] = ['text' => $event['obertitel'], 'size' => $font_size, 'weight' => $font_weight];
+	if ($event['titel']) {
+		if (!empty($element['balance-title-max'])) {
+			$title_row = $element['balance-title-row'] ?? $element['balance-title-max'];
+			$title_parts = mf_certificates_balance_text($event['titel']
+				, (int) $element['balance-title-max']
+				, (int) $title_row);
+			foreach ($title_parts as $title_part) {
+				$lines[] = ['text' => $title_part, 'size' => $font_size, 'weight' => $font_weight];
+			}
+		} else {
+			$lines[] = ['text' => $event['titel'], 'size' => $font_size, 'weight' => $font_weight];
+		}
+	}
+	$lines[] = ['text' => $event['untertitel'], 'size' => $font_size_subtitle, 'weight' => $font_weight_subtitle];
+	foreach ($lines as $line) {
+		$pdf->setFont(mf_certificates_event_font($event, $line['weight']), '', $line['size']);
+		$cell_height = round($line['size'] * $line_height);
+		$pdf->Cell($element['width'], $cell_height, $line['text'], 0, 2, $align);
+	}
+}
+
+function mf_certificates_event_font($event, $font_weight) {
+	if ($font_weight === 'bold' && !empty($event['font_bold'])) {
+		return $event['font_bold'];
+	}
+	return $event['font_regular'];
 }
 
 /**

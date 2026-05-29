@@ -10,9 +10,9 @@ function cms_urkunde_out($pdf, $turnier, $line, $type) {
 		$line['spieler'] = mf_certificates_balance_text($line['spieler'], 26, 20);
 	}
 	if (count($line['spieler']) > 1 OR count($line['verein']) > 3) {
-		$pdf->SetXY(0, 380);
+		$pdf->SetXY(0, 480);
 	} else {
-		$pdf->SetXY(0, 430);
+		$pdf->SetXY(0, 490);
 	}
 
 // Spielername
@@ -33,21 +33,17 @@ function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
 // Turniername
 // Platzierung/mit Erfolg teilgenommen
-	$pdf->setFont($turnier['font_regular'], '', 14);
+	$pdf->setFont($turnier['font_regular'], '', 20);
 	$pdf->SetXY(0, $pdf->getY() + 14);
-	if ($turnier['obertitel'])
-		$pdf->Cell(0, 18, $turnier['obertitel'], 0, 0, 'C');
-	$pdf->Cell(0, 18, $turnier['titel'], 0, 2,'C'); 
-	$pdf->Cell(0, 18, $turnier['untertitel'], 0, 2, 'C');
 	if ($type === 'platz') {
 		$pdf->SetX(158);
 		$pdf->Cell(90, 44, 'hat den', 0, 0, 'R');
-		$pdf->setFont($turnier['font_bold'], '', 18);
+		$pdf->setFont($turnier['font_bold'], '', 20);
 		$pdf->Cell(110, 42, $line['rang'].'. Platz', 0, 0, $line['rang'] ? 'C' : 'R');
-		$pdf->setFont($turnier['font_regular'], '', 14);
+		$pdf->setFont($turnier['font_regular'], '', 20);
 		$pdf->Cell(90, 44, 'belegt', 0, 2, 'L'); 
 	} else {
-		$pdf->setFont($turnier['font_bold'], '', 14);
+		$pdf->setFont($turnier['font_regular'], '', 20);
 		$pdf->Cell(0, 44, $line['textzeile'], 0, 2, 'C'); 
 	}
 

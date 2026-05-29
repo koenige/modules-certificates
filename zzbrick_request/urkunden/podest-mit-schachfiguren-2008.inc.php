@@ -2,15 +2,6 @@
 
 function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
-// Turniername
-	$pdf->SetXY(145, 200);
-	$pdf->setFont($turnier['font_bold'], '', 20);
-	$pdf->Cell(200, 20, $turnier['obertitel'], 0, 2, 'C');
-	$pdf->SetX(26);
-	$pdf->Cell(575, 20, $turnier['titel'], 0, 2, 'C');
-	$pdf->setFont($turnier['font_regular'], '', 18);
-	$pdf->Cell(575, 18, $turnier['untertitel'], 0, 2, 'C'); 
-
 // Spielername
 	$pdf->setFont($turnier['font_bold'], '', 24);
 	$spieler_len = $pdf->GetStringWidth($line['spieler']);

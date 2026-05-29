@@ -7,7 +7,7 @@
 
 function cms_urkunde_out($pdf, $turnier, $line, $type) {
 
-	$pdf->SetXY(168, 375);
+	$pdf->SetXY(168, 430);
 
 	$spieler = mf_certificates_balance_text($line['spieler'], 20, 16);
 	$verein = mf_certificates_balance_text($line['verein'], 28, 24);
@@ -50,11 +50,6 @@ function cms_urkunde_out($pdf, $turnier, $line, $type) {
 	$abstand = (count($verein) + count($spieler) < 5) ? 24 : 4;
 	$pdf->SetXY(168, $pdf->getY() + $abstand);
 	$pdf->setFont($turnier['font_regular'], '', 14);
-	if ($turnier['obertitel'])
-		$pdf->Cell(300, 20, ($turnier['obertitel'] ? ' '.$turnier['obertitel'] : ''), 0, 2, 'C');
-	$pdf->Cell(300, 20, $turnier['titel'], 0, 2, 'C');
-	if ($turnier['untertitel'])
-		$pdf->Cell(300, 20, $turnier['untertitel'], 0, 2, 'C');
 	if ($pdf->getY() > 570) $pdf->SetXY(215, $pdf->getY());
 	$pdf->SetXY($pdf->getX() + 8, $pdf->getY());
 	if ($type === 'platz') {
