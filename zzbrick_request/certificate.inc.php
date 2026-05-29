@@ -142,7 +142,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	$where = array_merge($where, $filter['where']);
 
 	// Titel des Turniers
-	$event['vereinsprefix'] = '';
 	// @todo check why this is wrong, i. e. can have a slash:
 	if ($event['series_path'] AND $pos = strrpos($event['series_path'], '/'))
 		$event['series_path'] = substr($event['series_path'], $pos + 1);
@@ -160,7 +159,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		}
 		break;
 	case 'dsm':
-		$event['vereinsprefix'] = 'mit ';
 		$event['titel'] = explode(' ', $event['series']);
 		$after_wk = false;
 		foreach ($event['titel'] as $index => $part) {
@@ -175,13 +173,11 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		$event['titel'] = implode(' ', $event['titel']).' '.$event['year'];
 		break;
 	case 'dvm':
-		$event['vereinsprefix'] = 'mit ';
 		$event['titel'] = explode(' ', $event['series']);
 		array_pop($event['titel']);
 		$event['titel'] = implode(' ', $event['titel']).' '.$event['year'];
 		break;
 	case 'dlm':
-		$event['vereinsprefix'] = 'mit ';
 		$event['titel'] = $event['series'].' '.$event['year'];
 		break;
 	default:
@@ -240,8 +236,9 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		);
 		$data = wrap_db_fetch($sql, 'person_id');
 	}
+	$event['organisation_prefix'] = wrap_setting('tournaments_type_team') ? 'mit ' : '';
 	foreach ($data as $id => $line) {
-		$data[$id]['verein'] = $event['vereinsprefix'].$line['verein'];
+		$data[$id]['verein'] = $event['organisation_prefix'].$line['verein'];
 		switch ($type) {
 		case 'teilnahme':
 			$data[$id]['textzeile'] = $event['urkundentext'];
