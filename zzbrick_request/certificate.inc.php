@@ -141,49 +141,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	if ($filter['error']) return false;
 	$where = array_merge($where, $filter['where']);
 
-	// Titel des Turniers
-	// @todo check why this is wrong, i. e. can have a slash:
-	if ($event['series_path'] AND $pos = strrpos($event['series_path'], '/'))
-		$event['series_path'] = substr($event['series_path'], $pos + 1);
-
-	switch ($event['main_series_path']) {
-	case 'dem':
-		$event['titel'] = 'Deutsche Einzelmeisterschaft';
-		if (substr($event['series_path'], 0, 4) === 'odjm') {
-			$event['titel'] = 'Deutsche Juniorenmeisterschaft';
-		} elseif ($event['series_path'] === 'kika') {
-			$event['titel'] = 'Kinderschachturnier der DSJ';
-		}
-		if (!wrap_setting('tournaments_edition')) {
-			$event['titel'] .= ' '.$event['year'];
-		}
-		break;
-	case 'dsm':
-		$event['titel'] = explode(' ', $event['series']);
-		$after_wk = false;
-		foreach ($event['titel'] as $index => $part) {
-			if ($after_wk) {
-				unset($event['titel'][$index]);
-			}
-			if ($part === 'WK') {
-				unset($event['titel'][$index]);
-				$after_wk = true;
-			}
-		}
-		$event['titel'] = implode(' ', $event['titel']).' '.$event['year'];
-		break;
-	case 'dvm':
-		$event['titel'] = explode(' ', $event['series']);
-		array_pop($event['titel']);
-		$event['titel'] = implode(' ', $event['titel']).' '.$event['year'];
-		break;
-	case 'dlm':
-		$event['titel'] = $event['series'].' '.$event['year'];
-		break;
-	default:
-		$event['titel'] = $event['series'].' '.$event['year'];
-		break;
-	}
+	$event['titel'] = mf_certificates_title($event, $event['series_parameter']);
 	$event['obertitel'] = mf_certificates_supertitle();
 	$event['untertitel'] = mf_certificates_subtitle($event, $event['series_parameter']);
 
@@ -327,6 +285,30 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 
 	$pdf->output('F', $file['name'], true);
 	wrap_send_file($file);
+}
+
+/**
+ * certificate main title from series parameters
+ *
+ * Uses `certificates_title` from the series category parameters. Falls back to the series
+ * category name. Appends the event year when `tournaments_edition` is not set.
+ *
+ * @param array $event event data with `series`, `year`
+ * @param array $series parsed series parameters
+ * @return string title text
+ */
+function mf_certificates_title($event, $series) {
+	if (!empty($series['certificates_title'])) {
+		$title = $series['certificates_title'];
+	} elseif (!empty($event['series'])) {
+		$title = $event['series'];
+	} else {
+		return '';
+	}
+	if (!wrap_setting('tournaments_edition')) {
+		$title .= ' '.$event['year'];
+	}
+	return $title;
 }
 
 /**
