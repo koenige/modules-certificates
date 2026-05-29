@@ -35,7 +35,7 @@ function cms_urkunde_out($pdf, $turnier, $line, $type) {
 // Platzierung/mit Erfolg teilgenommen
 	$pdf->setFont($turnier['font_regular'], '', 14);
 	$pdf->SetXY(0, $pdf->getY() + 14);
-	if ($turnier['turnierzahl'])
+	if (wrap_setting('tournaments_edition'))
 		$pdf->Cell(0, 18, 'hat bei der '.$turnier['obertitel_dativ'], 0, 0, 'C');
 	else
 		$pdf->Cell(0, 18, 'hat bei der', 0, 2, 'C');

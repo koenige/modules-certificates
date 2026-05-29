@@ -102,9 +102,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	}
 
 	$event['urkundentext'] = 'hat mit Erfolg teilgenommen';
-	if (!isset($event['turnierzahl'])) {
-		$event['turnierzahl'] = false;
-	}
 	$event['date_of_certificate'] = ltrim(wrap_date_plain($event['date_of_certificate'], 'dates-de-long'), '0');
 
 	// Urkundentyp
@@ -162,9 +159,9 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			$event['titel'] = 'Kinderschachturnier der DSJ';
 			$event['titel_dativ'] = 'Kinderschachturniers der DSJ';
 		}
-		if ($event['turnierzahl']) {
-			$event['obertitel'] .= $event['turnierzahl'].'. ';
-			$event['obertitel_dativ'] .= $event['turnierzahl'].'. ';
+		if ($edition = wrap_setting('tournaments_edition')) {
+			$event['obertitel'] .= $edition.'. ';
+			$event['obertitel_dativ'] .= $edition.'. ';
 		} else {
 			$event['titel'] .= ' '.$event['year'];
 			$event['titel_dativ'] .= ' '.$event['year'];
