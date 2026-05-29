@@ -36,7 +36,8 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			, certificates.identifier AS urkunde_kennung
 			, SUBSTRING_INDEX(series.path, "/", -1) AS series_path
 			, series.category AS series
-			, tabellenstaende, alter_max
+			, series.parameters AS series_parameter
+			, tabellenstaende, alter_max AS age_max
 			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
 			, IF(events.offen = "ja", 1 , NULL) AS offen
 			, certificate_id
@@ -70,6 +71,8 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	}
 	if ($event['certificate_parameters'])
 		parse_str($event['certificate_parameters'], $event['p']);
+	if ($event['series_parameter'])
+		parse_str($event['series_parameter'], $event['series_parameter']);
 	if ($event['tournament_parameter']) {
 		parse_str($event['tournament_parameter'], $parameter);
 		unset($event['tournament_parameter']);
@@ -175,29 +178,27 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 				$event['obertitel'] .= 'Offene ';
 			$event['obertitel_dativ'] .= 'Offenen ';
 		}
-		if ($event['weiblich']) {
-			$event['untertitel'] = 'der Altersklasse unter '.$event['alter_max'].' Jahren weiblich';
-		} elseif ($event['series_path'] == 'odjm-a') {
-			$event['untertitel'] = 'A-Turnier';
-		} elseif ($event['series_path'] == 'odjm-b') {
-			$event['untertitel'] = 'B-Turnier';
-		} elseif ($event['series_path'] == 'odjm-c') {
-			$event['untertitel'] = 'C-Turnier';
-		} else {
-			$event['untertitel'] = 'der Altersklasse unter '.$event['alter_max'].' Jahren';
-			if ($event['series_path'] == 'odem-u25-a') $event['untertitel'] .= ' (A-Turnier)';
-			elseif ($event['series_path'] == 'odem-u25-b') $event['untertitel'] .= ' (B-Turnier)';
-		}
 		break;
 	case 'dsm':
+		$event['vereinsprefix'] = 'mit ';
+		$event['titel'] = explode(' ', $event['series']);
+		$after_wk = false;
+		foreach ($event['titel'] as $index => $part) {
+			if ($after_wk) {
+				unset($event['titel'][$index]);
+			}
+			if ($part === 'WK') {
+				unset($event['titel'][$index]);
+				$after_wk = true;
+			}
+		}
+		$event['titel'] = implode(' ', $event['titel']).' '.$event['year'];
+		$event['titel_dativ'] = str_replace('Deutsche', 'Deutschen', $event['titel']);
+		break;
 	case 'dvm':
 		$event['vereinsprefix'] = 'mit ';
 		$event['titel'] = explode(' ', $event['series']);
-		if ($event['main_series_path'] === 'dsm') {
-			$event['untertitel'] = mf_certificates_subtitle_dsm($event['titel']);
-		} else {
-			$event['untertitel'] = 'Altersklasse '.array_pop($event['titel']);
-		}
+		array_pop($event['titel']);
 		$event['titel'] = implode(' ', $event['titel']).' '.$event['year'];
 		$event['titel_dativ'] = str_replace('Deutsche', 'Deutschen', $event['titel']);
 		break;
@@ -205,14 +206,13 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		$event['vereinsprefix'] = 'mit ';
 		$event['titel'] = $event['series'].' '.$event['year'];
 		$event['obertitel'] = '';
-		$event['untertitel'] = '';
 		break;
 	default:
 		$event['titel'] = $event['series'].' '.$event['year'];
 		$event['obertitel'] = '';
-		$event['untertitel'] = '';
 		break;
 	}
+	$event['untertitel'] = mf_certificates_subtitle($event, $event['series_parameter']);
 
 	// Teams?
 	if (wrap_setting('tournaments_type_team')) {
@@ -355,19 +355,26 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	wrap_send_file($file);
 }
 
-function mf_certificates_subtitle_dsm(&$title) {
-	$glue = [];
-	$glue_parts = false;
-	foreach ($title as $index => $part) {
-		if ($glue_parts) {
-			$glue[] = $title[$index];
-			unset($title[$index]);
-		}
-		if ($part === 'WK') {
-			unset($title[$index]);
-			$glue[] = 'Wettkampfklasse';
-			$glue_parts = true;
-		}
+/**
+ * certificate subtitle from series parameters
+ *
+ * Reads `certificates_subtitle` or, for female standings, `certificates_subtitle_female`
+ * from the series category parameters. Replaces `{age_max}` with the tournament age limit.
+ *
+ * @param array $event event data with optional `weiblich`, `age_max`
+ * @param array $series parsed series parameters
+ * @return string subtitle text, or empty string if not configured
+ */
+function mf_certificates_subtitle($event, $series) {
+	if (!empty($event['weiblich']) && !empty($series['certificates_subtitle_female'])) {
+		$subtitle = $series['certificates_subtitle_female'];
+	} elseif (!empty($series['certificates_subtitle'])) {
+		$subtitle = $series['certificates_subtitle'];
+	} else {
+		return '';
 	}
-	return implode(' ', $glue);
+	if ($event['age_max']) {
+		$subtitle = str_replace('{age_max}', $event['age_max'], $subtitle);
+	}
+	return $subtitle;
 }
