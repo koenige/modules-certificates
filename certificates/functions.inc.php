@@ -185,8 +185,9 @@ function mf_certificates_text(&$pdf, $element, $event, $text) {
 	$pdf->SetXY($left, $top);
 
 	$width = mf_certificates_val($element['width']);
-	$height = mf_certificates_val($element['height'])
-		?? round($font_size * wrap_setting('certificates_line_height'));
+	$height = isset($element['height'])
+		? mf_certificates_val($element['height'])
+		: round($font_size * wrap_setting('certificates_line_height'));
 	$align = mf_certificates_align($element['text-align']) ?? ''; // standard is left
 	$pdf->Cell($width, $height, $text, 0, 2, $align); 
 }
