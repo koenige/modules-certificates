@@ -232,6 +232,12 @@ function mf_certificates_event_sub($event, $series) {
  * @param string $text
  */
 function mf_certificates_text(&$pdf, $element, $event, $text) {
+	$element['width'] = mf_certificates_element_width($pdf, $element);
+	if (!isset($element['height'])) {
+		$element['height'] = round($font_size * wrap_setting('certificates_line_height'));
+	} else {
+		$element['height'] = mf_certificates_val($element['height']);
+	}
 	$element = mf_certificates_position($pdf, $element);
 	
 	$font_size = mf_certificates_val($element['font-size']
@@ -242,12 +248,8 @@ function mf_certificates_text(&$pdf, $element, $event, $text) {
 	$top = mf_certificates_val($element['top']);
 	$pdf->SetXY($left, $top);
 
-	$width = mf_certificates_val($element['width']);
-	$height = isset($element['height'])
-		? mf_certificates_val($element['height'])
-		: round($font_size * wrap_setting('certificates_line_height'));
 	$align = mf_certificates_align($element['text-align']) ?? ''; // standard is left
-	$pdf->Cell($width, $height, $text, 0, 2, $align); 
+	$pdf->Cell($element['width'], $element['height'], $text, 0, 2, $align); 
 }
 
 /**
