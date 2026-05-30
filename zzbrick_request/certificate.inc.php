@@ -141,10 +141,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	if ($filter['error']) return false;
 	$where = array_merge($where, $filter['where']);
 
-	$event['titel'] = mf_certificates_title($event, $event['series_parameter']);
-	$event['obertitel'] = mf_certificates_supertitle();
-	$event['untertitel'] = mf_certificates_subtitle($event, $event['series_parameter']);
-
 	// Teams?
 	if (wrap_setting('tournaments_type_team')) {
 		$sql = 'SELECT teams.team_id
@@ -288,73 +284,4 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 
 	$pdf->output('F', $file['name'], true);
 	wrap_send_file($file);
-}
-
-/**
- * certificate main title from series parameters
- *
- * Uses `certificates_title` from the series category parameters. Falls back to the series
- * category name. Appends the event year when `tournaments_edition` is not set.
- *
- * @param array $event event data with `series`, `year`
- * @param array $series parsed series parameters
- * @return string title text
- */
-function mf_certificates_title($event, $series) {
-	if (!empty($series['certificates_title'])) {
-		$title = $series['certificates_title'];
-	} elseif (!empty($event['series'])) {
-		$title = $event['series'];
-	} else {
-		return '';
-	}
-	if (!wrap_setting('tournaments_edition')) {
-		$title .= ' '.$event['year'];
-	}
-	return $title;
-}
-
-/**
- * certificate subtitle from series parameters
- *
- * Reads `certificates_subtitle` or, for female standings, `certificates_subtitle_female`
- * from the series category parameters. Replaces `{age_max}` with the tournament age limit.
- *
- * @param array $event event data with optional `weiblich`, `age_max`
- * @param array $series parsed series parameters
- * @return string subtitle text, or empty string if not configured
- */
-function mf_certificates_subtitle($event, $series) {
-	if (!empty($event['weiblich']) && !empty($series['certificates_subtitle_female'])) {
-		$subtitle = $series['certificates_subtitle_female'];
-	} elseif (!empty($series['certificates_subtitle'])) {
-		$subtitle = $series['certificates_subtitle'];
-	} else {
-		return '';
-	}
-	if ($event['age_max']) {
-		$subtitle = str_replace('{age_max}', $event['age_max'], $subtitle);
-	}
-	return $subtitle;
-}
-
-/**
- * certificate supertitle from series parameters and tournament edition
- *
- * Uses `certificates_supertitle` with `{tournaments_edition}` replaced by the edition number.
- * If no supertitle is configured but `tournaments_edition` is set, uses `{tournaments_edition}.`
- * Without an edition, `{tournaments_edition}` and an optional following dot are removed from the template.
- *
- * @return string supertitle text, or empty string
- */
-function mf_certificates_supertitle() {
-	$edition = wrap_setting('tournaments_edition');
-	$template = wrap_setting('certificates_supertitle');
-	if (!$template AND !$edition) return '';
-	if (!$template)
-		$template = '{tournaments_edition}.';
-	if ($edition)
-		return str_replace('{tournaments_edition}', $edition, $template);
-	$supertitle = preg_replace('/\s*\{tournaments_edition\}\.?/', '', $template);
-	return trim(preg_replace('/\s+/', ' ', $supertitle));
 }
