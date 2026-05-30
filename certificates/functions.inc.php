@@ -109,19 +109,7 @@ function mf_certificates_position($pdf, $element) {
  * @param array $event
  */
 function mf_certificates_event(&$pdf, $element, $event) {
-	$page_width = $pdf->GetPageWidth();
-	if (empty($element['width']) && !empty($element['left']) && !empty($element['right'])) {
-		$left = mf_certificates_val($element['left']);
-		$right = mf_certificates_val($element['right']);
-		$element['width'] = $page_width - $left - $right;
-	} elseif (empty($element['width']) && !empty($element['left'])) {
-		$left = mf_certificates_val($element['left']);
-		$element['width'] = $page_width - 2 * $left;
-	} elseif (!empty($element['width'])) {
-		$element['width'] = mf_certificates_val($element['width']);
-	} else {
-		$element['width'] = $page_width;
-	}
+	$element['width'] = mf_certificates_element_width($pdf, $element);
 	$element['height'] = 1;
 	$element = mf_certificates_position($pdf, $element);
 	$pdf->SetXY($element['pos_x'], $element['pos_y']);
@@ -260,6 +248,29 @@ function mf_certificates_text(&$pdf, $element, $event, $text) {
 		: round($font_size * wrap_setting('certificates_line_height'));
 	$align = mf_certificates_align($element['text-align']) ?? ''; // standard is left
 	$pdf->Cell($width, $height, $text, 0, 2, $align); 
+}
+
+/**
+ * derive element width from explicit width or page margins
+ *
+ * @param object $pdf
+ * @param array $element parameters: width, left, right
+ * @return int
+ */
+function mf_certificates_element_width($pdf, $element) {
+	if (!empty($element['width']))
+		return mf_certificates_val($element['width']);
+	$page_width = $pdf->GetPageWidth();
+	if (!empty($element['left']) && !empty($element['right'])) {
+		$left = mf_certificates_val($element['left']);
+		$right = mf_certificates_val($element['right']);
+		return $page_width - $left - $right;
+	}
+	if (!empty($element['left'])) {
+		$left = mf_certificates_val($element['left']);
+		return $page_width - 2 * $left;
+	}
+	return $page_width;
 }
 
 /**
