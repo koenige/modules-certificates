@@ -95,14 +95,10 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	
 	// Turnier
 	$sql = 'SELECT runden
-			, series.category AS series
 			, tournaments.tabellenstaende, alter_max AS age_max
 			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
-		FROM events
-		LEFT JOIN tournaments USING (event_id)
-		LEFT JOIN categories series
-			ON events.series_category_id = series.category_id
-		WHERE events.event_id = %d';
+		FROM tournaments
+		WHERE event_id = %d';
 	$sql = sprintf($sql, $event['event_id']);
 	$event += wrap_db_fetch($sql);
 	
