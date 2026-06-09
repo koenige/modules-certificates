@@ -35,7 +35,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			, signature_left, signature_right
 			, certificates.identifier AS urkunde_kennung
 			, series.category AS series
-			, tabellenstaende, alter_max AS age_max
+			, tournaments.tabellenstaende, alter_max AS age_max
 			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
 			, certificate_id
 			, certificates.parameters AS certificate_parameters
@@ -132,7 +132,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			break;
 	}
 	if ($type === 'platz') {
-		$order_by_limit = 'ORDER BY platz_no, t_nachname, t_vorname
+		$order_by_limit = 'ORDER BY rank_no, t_nachname, t_vorname
 			LIMIT /*_SETTING certificates_placement_count _*/; ';
 	} else {
 		$order_by_limit = 'ORDER BY t_nachname, t_vorname, contact_id';
@@ -150,14 +150,14 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 					FROM participations
 					WHERE participations.team_id = teams.team_id
 					AND NOT ISNULL(brett_no)) AS verein
-				, tabellenstaende.platz_no
-				, tabellenstaende.platz_no AS rang
+				, standings.rank_no
+				, standings.rank_no AS rang
 			FROM teams
-			LEFT JOIN tabellenstaende
-				ON tabellenstaende.team_id = teams.team_id
-				AND tabellenstaende.runde_no = %d
+			LEFT JOIN standings
+				ON standings.team_id = teams.team_id
+				AND standings.runde_no = %d
 			WHERE teams.event_id = %d
-			ORDER BY platz_no, team, team_no';
+			ORDER BY rank_no, team, team_no';
 		$sql = sprintf($sql, $event['runden'], $event['event_id']);
 		$data = wrap_db_fetch($sql, 'team_id');
 		// @todo $where
@@ -170,13 +170,13 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 				, participations.t_nachname AS nachname
 				, t_verein AS verein
 				, urkundentext
-				, tabellenstaende.platz_no
+				, standings.rank_no
 			FROM participations
 			LEFT JOIN persons USING (contact_id)
-			LEFT JOIN tabellenstaende
-				ON tabellenstaende.person_id = persons.person_id
-				AND tabellenstaende.event_id = participations.event_id
-				AND tabellenstaende.runde_no = %d
+			LEFT JOIN standings
+				ON standings.person_id = persons.person_id
+				AND standings.event_id = participations.event_id
+				AND standings.runde_no = %d
 			WHERE participations.event_id = %d AND usergroup_id = /*_ID usergroups spieler _*/
 			AND NOT ISNULL(participations.contact_id)
 			AND participations.status_category_id = /*_ID categories participation-status/participant _*/
@@ -210,7 +210,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 				$data[$person_id]['rang'] = $i;
 				$i++;
 			} else {
-				$data[$person_id]['rang'] = $person['platz_no'];
+				$data[$person_id]['rang'] = $person['rank_no'];
 			}
 		}
 	}
