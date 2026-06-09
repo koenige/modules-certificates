@@ -27,36 +27,28 @@
 function mod_certificates_certificate($params, $settings = [], $event = []) {
 	if (!$event) return false;
 	if (count($params) !== 3) return false;
-
-	// Turnier
-	// @todo ggf. Urkundenstandardtext überschreibbar machen
-	$sql = 'SELECT runden
-			, place, date_of_certificate
+	
+	// get certificate
+	$sql = 'SELECT certificate_id
+			, certificates.identifier AS certificate_identifier
+			, certificates.parameters
 			, signature_left, signature_right
-			, certificates.identifier AS urkunde_kennung
-			, series.category AS series
-			, tournaments.tabellenstaende, alter_max AS age_max
-			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
-			, certificate_id
-			, certificates.parameters AS certificate_parameters
-			, /*_PREFIX_*/media.filename, /*_PREFIX_*/media.version
+			, place, date_of_certificate
+			, /*_PREFIX_*/media.filename
 			, o_mime.extension AS extension
 		FROM events
 		LEFT JOIN events_certificates USING (event_id)
 		LEFT JOIN certificates USING (certificate_id)
-		LEFT JOIN tournaments USING (event_id)
-		LEFT JOIN categories series
-			ON events.series_category_id = series.category_id
 		LEFT JOIN /*_PREFIX_*/media
 			ON /*_PREFIX_*/media.medium_id = events_certificates.logo_medium_id
 		LEFT JOIN /*_PREFIX_*/filetypes AS o_mime USING (filetype_id)
 		LEFT JOIN /*_PREFIX_*/filetypes AS t_mime 
 			ON /*_PREFIX_*/media.thumb_filetype_id = t_mime.filetype_id
-		WHERE events.identifier = "%d/%s"';
-	$sql = sprintf($sql, $params[0], wrap_db_escape($params[1]));
-	$event += wrap_db_fetch($sql);
+		WHERE events.event_id = %d';
+	$sql = sprintf($sql, $event['event_id']);
+	$certificate = wrap_db_fetch($sql);
 
-	if (empty($event['urkunde_kennung'])) {
+	if (!$certificate) {
 		$page['title'] = $event['event'].' '.$event['year'];
 		$page['breadcrumbs'][]['title'] = 'Urkunde';
 		if ($path = wrap_path('certificates_event_edit', [$params[0].'/'.$params[1]])) {
@@ -66,18 +58,11 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		}
 		return $page;
 	}
-	if ($event['certificate_parameters'])
-		parse_str($event['certificate_parameters'], $event['p']);
-	if ($event['series_parameter']) {
-		parse_str($event['series_parameter'], $event['series_parameter']);
-		wrap_match_module_parameters('series', $event['series_parameter'], false);
-	}
-	if ($event['tournament_parameter']) {
-		parse_str($event['tournament_parameter'], $parameter);
-		unset($event['tournament_parameter']);
-		$event = array_merge($parameter, $event);
-	}
 
+	if ($certificate['parameters'])
+		parse_str($certificate['parameters'], $certificate['parameters']);
+
+	// get certificate elements
 	$sql = 'SELECT certificateelement_id
 			, categories.category
 			, media.filename, o_mime.extension
@@ -91,19 +76,42 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		LEFT JOIN filetypes AS o_mime USING (filetype_id)
 	    WHERE certificate_id = %d
 	    ORDER BY categories.sequence';
-	$sql = sprintf($sql, $event['certificate_id']);
-	$event['elements'] = wrap_db_fetch($sql, 'certificateelement_id');
+	$sql = sprintf($sql, $certificate['certificate_id']);
+	$certificate['elements'] = wrap_db_fetch($sql, 'certificateelement_id');
 	$param_fields = ['parameters','category_parameters'];
-	foreach ($event['elements'] as $id => $element) {
+	foreach ($certificate['elements'] as $id => $element) {
 		foreach ($param_fields as $param_field) {
 			if (!$element[$param_field]) continue;
 			parse_str($element[$param_field], $element_params);
-			$event['elements'][$id] = array_merge($event['elements'][$id], $element_params);
+			$certificate['elements'][$id] = array_merge($certificate['elements'][$id], $element_params);
 		}
+	}
+	
+	// Turnier
+	// @todo ggf. Urkundenstandardtext überschreibbar machen
+	$sql = 'SELECT runden
+			, series.category AS series
+			, tournaments.tabellenstaende, alter_max AS age_max
+			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
+		FROM events
+		LEFT JOIN tournaments USING (event_id)
+		LEFT JOIN categories series
+			ON events.series_category_id = series.category_id
+		WHERE events.event_id = %d';
+	$sql = sprintf($sql, $event['event_id']);
+	$event += wrap_db_fetch($sql);
+	
+	if ($event['series_parameter']) {
+		parse_str($event['series_parameter'], $event['series_parameter']);
+		wrap_match_module_parameters('series', $event['series_parameter'], false);
+	}
+	if ($event['tournament_parameter']) {
+		parse_str($event['tournament_parameter'], $parameter);
+		unset($event['tournament_parameter']);
+		$event = array_merge($parameter, $event);
 	}
 
 	$event['urkundentext'] = 'hat mit Erfolg teilgenommen';
-	$event['date_of_certificate'] = ltrim(wrap_date_plain($event['date_of_certificate'], 'dates-de-long'), '0');
 
 	// Urkundentyp
 	$type = $params[2];
@@ -216,17 +224,17 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	}
 
 	wrap_lib('tfpdf');
-	require_once __DIR__.'/urkunden/'.$event['urkunde_kennung'].'.inc.php';
+	require_once __DIR__.'/urkunden/'.$certificate['certificate_identifier'].'.inc.php';
 	
-	if (!empty($event['p']['memory_limit'])) {
-		if (wrap_return_bytes(ini_get('memory_limit')) < wrap_return_bytes($event['p']['memory_limit']))
-			ini_set('memory_limit', $event['p']['memory_limit']);
+	if (!empty($certificate['parameters']['memory_limit'])) {
+		if (wrap_return_bytes(ini_get('memory_limit')) < wrap_return_bytes($certificate['parameters']['memory_limit']))
+			ini_set('memory_limit', $certificate['parameters']['memory_limit']);
 	}
 	$pdf = new TFPDF('P', 'pt', 'A4');		// panorama = p, DIN A4, 595 x 842
 	$pdf->setCompression(true);
 	$pdf->setMargins(0,0);
-	if (!empty($event['p']['font_file'])) {
-		foreach ($event['p']['font_file'] as $typeface => $font_file) {
+	if (!empty($certificate['parameters']['font_file'])) {
+		foreach ($certificate['parameters']['font_file'] as $typeface => $font_file) {
 			$font_path = pathinfo($font_file);
 			$pdf->AddFont($font_path['filename'], '', $font_file, true);
 			$event['font_'.$typeface] = $font_path['filename'];
@@ -234,15 +242,15 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	}
 	foreach ($data as $line) {
 		$pdf->addPage();
-		foreach ($event['elements'] as $element) {
+		foreach ($certificate['elements'] as $element) {
 			switch ($element['type']) {
 			case 'image':
 				mf_certificates_image($pdf, $element);
 				break;
 			case 'logo':
-				if (!$event['filename']) break;
-				$element['filename'] = $event['filename'];
-				$element['extension'] = $event['extension'];
+				if (!$certificate['filename']) break;
+				$element['filename'] = $certificate['filename'];
+				$element['extension'] = $certificate['extension'];
 				mf_certificates_image($pdf, $element);
 				break;
 			case 'event':
@@ -256,17 +264,18 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		}
 		$pdf = cms_urkunde_out($pdf, $event, $line, $type);
 		$pdf->SetAutoPageBreak(false);
-		foreach ($event['elements'] as $element) {
+		foreach ($certificate['elements'] as $element) {
 			switch ($element['type']) {
 			case 'place-date':
-				$text = sprintf('%s, %s', $event['place'], $event['date_of_certificate']);
+				$date_of_certificate = ltrim(wrap_date_plain($certificate['date_of_certificate'], 'dates-de-long'), '0');
+				$text = sprintf('%s, %s', $certificate['place'], $date_of_certificate);
 				mf_certificates_text($pdf, $element, $event, $text);
 				break;
 			case 'signature-left':
-				mf_certificates_text($pdf, $element, $event, $event['signature_left']);
+				mf_certificates_text($pdf, $element, $event, $certificate['signature_left']);
 				break;
 			case 'signature-right':
-				mf_certificates_text($pdf, $element, $event, $event['signature_right']);
+				mf_certificates_text($pdf, $element, $event, $certificate['signature_right']);
 				break;
 			}
 		}
