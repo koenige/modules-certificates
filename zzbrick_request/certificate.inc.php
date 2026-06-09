@@ -93,19 +93,18 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		}
 	}
 	
-	// Turnier
-	$sql = 'SELECT runden
-			, tournaments.tabellenstaende, alter_max AS age_max
-			, IF(tournaments.geschlecht = "w", 1, NULL) AS weiblich
-		FROM tournaments
-		WHERE event_id = %d';
-	$sql = sprintf($sql, $event['event_id']);
-	$event += wrap_db_fetch($sql);
-	
-	if ($event['tournament_parameter']) {
-		parse_str($event['tournament_parameter'], $parameter);
-		unset($event['tournament_parameter']);
-		$event = array_merge($parameter, $event);
+	$files = wrap_include('certificate');
+	foreach ($files['functions'] ?? [] as $function) {
+		// does this package apply?
+		if ($function['short'] !== 'certificate_applies') continue;
+		if (!call_user_func($function['function'], $event)) continue;
+		// yes: get main function of package
+		foreach ($files['functions'] as $certificate_function) {
+			if ($certificate_function['package'] !== $function['package']) continue;
+			if ($certificate_function['short'] !== 'certificate') continue;
+			$event = call_user_func($certificate_function['function'], $event);
+			break;
+		}
 	}
 
 	// Urkundentyp
