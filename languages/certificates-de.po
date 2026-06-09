@@ -20,7 +20,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 3.9\n"
+
+#: configuration/settings.cfg
+msgid "participated successfully"
+msgstr "hat mit Erfolg teilgenommen"
 
 #: zzbrick_tables/certificateelements.php
 msgid "Elements of Certificates"

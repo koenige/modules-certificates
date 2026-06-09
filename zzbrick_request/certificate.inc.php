@@ -59,8 +59,14 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		return $page;
 	}
 
-	if ($certificate['parameters'])
+	if ($event['series_parameter']) {
+		parse_str($event['series_parameter'], $event['series_parameter']);
+		wrap_match_module_parameters('series', $event['series_parameter'], false);
+	}
+	if ($certificate['parameters']) {
 		parse_str($certificate['parameters'], $certificate['parameters']);
+		wrap_match_module_parameters('certificates', $certificate['parameters'], false);
+	}
 
 	// get certificate elements
 	$sql = 'SELECT certificateelement_id
@@ -88,7 +94,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	}
 	
 	// Turnier
-	// @todo ggf. Urkundenstandardtext überschreibbar machen
 	$sql = 'SELECT runden
 			, series.category AS series
 			, tournaments.tabellenstaende, alter_max AS age_max
@@ -101,17 +106,11 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 	$sql = sprintf($sql, $event['event_id']);
 	$event += wrap_db_fetch($sql);
 	
-	if ($event['series_parameter']) {
-		parse_str($event['series_parameter'], $event['series_parameter']);
-		wrap_match_module_parameters('series', $event['series_parameter'], false);
-	}
 	if ($event['tournament_parameter']) {
 		parse_str($event['tournament_parameter'], $parameter);
 		unset($event['tournament_parameter']);
 		$event = array_merge($parameter, $event);
 	}
-
-	$event['urkundentext'] = 'hat mit Erfolg teilgenommen';
 
 	// Urkundentyp
 	$type = $params[2];
@@ -203,7 +202,12 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		$data[$id]['verein'] = $event['organisation_prefix'].$line['verein'];
 		switch ($type) {
 		case 'teilnahme':
-			$data[$id]['textzeile'] = $event['urkundentext'];
+			$text = wrap_setting('certificates_participation_text');
+			if (!$text) {
+				$data[$id]['textzeile'] = '';
+				break;
+			}
+			$data[$id]['textzeile'] = wrap_text($text, ['ignore_missing_translation' => true]);
 			break;
 		case 'spezial':
 			$data[$id]['textzeile'] = $line['urkundentext'];
