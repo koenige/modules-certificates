@@ -93,32 +93,35 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		}
 	}
 	
+	$possible_types = ['teilnahme', 'spezial'];
+	
 	$files = wrap_include('certificate');
+	$packages = [];
 	foreach ($files['functions'] ?? [] as $function) {
 		// does this package apply?
 		if ($function['short'] !== 'certificate_applies') continue;
 		if (!call_user_func($function['function'], $event)) continue;
-		// yes: get main function of package
-		foreach ($files['functions'] as $certificate_function) {
-			if ($certificate_function['package'] !== $function['package']) continue;
-			if ($certificate_function['short'] !== 'certificate') continue;
-			$event = call_user_func($certificate_function['function'], $event);
-			break;
+		$packages[] = $function['package'];
+	}
+	if ($packages) {
+		foreach ($files['functions'] as $function) {
+			if (!in_array($function['package'], $packages)) continue;
+			switch ($function['short']) {
+				case 'certificate':
+					$event = call_user_func($function['function'], $event);
+					break;
+				case 'certificate_types':
+					$possible_types = array_merge($possible_types, call_user_func($function['function'], $event));
+					break;
+					
+			}
 		}
 	}
 
-	// Urkundentyp
+	// type of certificate
 	$type = $params[2];
-	$possible_types = ['teilnahme', 'spezial', 'platz'];
-	if ($event['tabellenstaende']) {
-		// @todo currently, only 'w' for female is supported
-		$tabellenstaende = explode(',', $event['tabellenstaende']);
-		foreach ($tabellenstaende as $tabellenstand) {
-			if (!$tabellenstand) continue;
-			$possible_types[] = 'platz-'.$tabellenstand;
-		}
-	}
 	if (!in_array($type, $possible_types)) return false;
+
 	$where = [];
 	$filter_kennung = '';
 	switch ($type) {
@@ -132,12 +135,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			$event['weiblich'] = true;
 			$type = 'platz';
 			break;
-	}
-	if ($type === 'platz') {
-		$order_by_limit = 'ORDER BY rank_no, t_nachname, t_vorname
-			LIMIT /*_SETTING certificates_placement_count _*/; ';
-	} else {
-		$order_by_limit = 'ORDER BY t_nachname, t_vorname, contact_id';
 	}
 	$filter = mf_tournaments_standings_filter($filter_kennung);
 	if ($filter['error']) return false;
@@ -165,6 +162,12 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		// @todo $where
 		// @todo ORDER BY
 	} else {
+		if ($type === 'platz') {
+			$order_by_limit = 'ORDER BY rank_no, t_nachname, t_vorname
+				LIMIT /*_SETTING certificates_placement_count _*/; ';
+		} else {
+			$order_by_limit = 'ORDER BY t_nachname, t_vorname, contact_id';
+		}
 		// Spieler
 		$sql = 'SELECT persons.person_id
 				, CONCAT(participations.t_vorname, " ", IFNULL(CONCAT(participations.t_namenszusatz, " "), ""), participations.t_nachname) AS spieler
