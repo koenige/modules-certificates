@@ -145,25 +145,8 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			break;
 		}
 	}
-	if (is_null($data)) {
-		$sql = 'SELECT persons.person_id
-				, CONCAT(participations.t_vorname, " ", IFNULL(CONCAT(participations.t_namenszusatz, " "), ""), participations.t_nachname) AS spieler
-				, CONCAT(participations.t_vorname, " ", IFNULL(CONCAT(participations.t_namenszusatz, " "), "")) AS vorname
-				, participations.t_nachname AS nachname
-				, t_verein AS verein
-				, urkundentext
-			FROM participations
-			LEFT JOIN persons USING (contact_id)
-			WHERE participations.event_id = %d AND usergroup_id = /*_ID usergroups spieler _*/
-			AND NOT ISNULL(participations.contact_id)
-			AND participations.status_category_id = /*_ID categories participation-status/participant _*/
-			%s
-			ORDER BY t_nachname, t_vorname, contact_id';
-		$sql = sprintf($sql, $event['event_id']
-			, $certificate['sql_where'] ? ' AND '.implode(' AND ', $certificate['sql_where']) : ''
-		);
-		$data = wrap_db_fetch($sql, 'person_id');
-	}
+	if (is_null($data))
+		$data = mod_certificates_certificate_data($event, $certificate);
 
 	foreach ($data as $id => $line) {
 		$data[$id]['verein'] = ($event['organisation_prefix'] ?? '').$line['verein'];
@@ -252,4 +235,32 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 
 	$pdf->output('F', $file['name'], true);
 	wrap_send_file($file);
+}
+
+/**
+ * get participant data for certificate, if not collected otherwise
+ *
+ * @param array $event
+ * @param array $certificate
+ * @return array
+ */
+function mod_certificates_certificate_data($event, $certificate) {
+	$sql = 'SELECT persons.person_id
+			, CONCAT(participations.t_vorname, " ", IFNULL(CONCAT(participations.t_namenszusatz, " "), ""), participations.t_nachname) AS spieler
+			, CONCAT(participations.t_vorname, " ", IFNULL(CONCAT(participations.t_namenszusatz, " "), "")) AS vorname
+			, participations.t_nachname AS nachname
+			, t_verein AS verein
+			, urkundentext
+		FROM participations
+		LEFT JOIN persons USING (contact_id)
+		WHERE participations.event_id = %d AND usergroup_id = /*_ID usergroups spieler _*/
+		AND NOT ISNULL(participations.contact_id)
+		AND participations.status_category_id = /*_ID categories participation-status/participant _*/
+		%s
+		ORDER BY t_nachname, t_vorname, contact_id';
+	$sql = sprintf($sql
+		, $event['event_id']
+		, $certificate['sql_where'] ? ' AND '.implode(' AND ', $certificate['sql_where']) : ''
+	);
+	return wrap_db_fetch($sql, 'person_id');
 }
