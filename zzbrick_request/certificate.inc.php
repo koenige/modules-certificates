@@ -103,102 +103,71 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		if (!call_user_func($function['function'], $event)) continue;
 		$packages[] = $function['package'];
 	}
-	if ($packages) {
-		foreach ($files['functions'] as $function) {
-			if (!in_array($function['package'], $packages)) continue;
-			switch ($function['short']) {
-				case 'certificate':
-					$event = call_user_func($function['function'], $event);
-					break;
-				case 'certificate_types':
-					$possible_types = array_merge($possible_types, call_user_func($function['function'], $event));
-					break;
-					
-			}
+	// no packages match at all? ignore all
+	if (!$packages) $files['functions'] = [];
+	foreach ($files['functions'] as $index => $function) {
+		if (!in_array($function['package'], $packages)) {
+			// remove functions of packages that do not match
+			unset($files['functions'][$index]);
+			continue;
+		}
+		switch ($function['short']) {
+			case 'certificate':
+				$event = call_user_func($function['function'], $event);
+				break;
+			case 'certificate_types':
+				$possible_types = array_merge($possible_types, call_user_func($function['function'], $event));
+				break;
 		}
 	}
 
 	// type of certificate
-	$type = $params[2];
-	if (!in_array($type, $possible_types)) return false;
-
-	$where = [];
-	$filter_kennung = '';
-	switch ($type) {
-		case 'spezial':
-			$where[] = 'urkundentext IS NOT NULL';
-			break;
-		case 'platz-w':
-			$filter_kennung = 'w';
-			if (wrap_setting('certificates_placement_count_female'))
-				wrap_setting('certificates_placement_count', wrap_setting('certificates_placement_count_female'));
-			$event['weiblich'] = true;
-			$type = 'platz';
-			break;
+	$certificate['type'] = $params[2];
+	if (!in_array($certificate['type'], $possible_types)) return false;
+	if (($pos = strpos($certificate['type'], '-')) !== false) {
+		$certificate['type_filter'] = substr($certificate['type'], $pos + 1);
+		$certificate['type'] = substr($certificate['type'], 0, $pos);
 	}
-	$filter = mf_tournaments_standings_filter($filter_kennung);
-	if ($filter['error']) return false;
-	$where = array_merge($where, $filter['where']);
 
-	// Teams?
-	if (wrap_setting('tournaments_type_team')) {
-		$sql = 'SELECT teams.team_id
-				, CONCAT(team, IFNULL(CONCAT(" ", team_no), "")) AS spieler
-				, (SELECT
-					GROUP_CONCAT(CONCAT(t_vorname, " ", IFNULL(CONCAT(t_namenszusatz, " "), ""), t_nachname) ORDER BY brett_no SEPARATOR ", ") AS spieler
-					FROM participations
-					WHERE participations.team_id = teams.team_id
-					AND NOT ISNULL(brett_no)) AS verein
-				, standings.rank_no
-				, standings.rank_no AS rang
-			FROM teams
-			LEFT JOIN standings
-				ON standings.team_id = teams.team_id
-				AND standings.runde_no = %d
-			WHERE teams.event_id = %d
-			ORDER BY rank_no, team, team_no';
-		$sql = sprintf($sql, $event['runden'], $event['event_id']);
-		$data = wrap_db_fetch($sql, 'team_id');
-		// @todo $where
-		// @todo ORDER BY
-	} else {
-		if ($type === 'platz') {
-			$order_by_limit = 'ORDER BY rank_no, t_nachname, t_vorname
-				LIMIT /*_SETTING certificates_placement_count _*/; ';
-		} else {
-			$order_by_limit = 'ORDER BY t_nachname, t_vorname, contact_id';
+	$certificate['sql_where'] = [];
+	switch ($certificate['type']) {
+	case 'spezial':
+		$certificate['sql_where'][] = 'urkundentext IS NOT NULL';
+		break;
+	}
+
+	$data = null;
+	foreach ($files['functions'] as $function) {
+		switch ($function['short']) {
+		case 'certificate_data':
+			list($data, $event) = call_user_func($function['function'], $event, $certificate);
+			if (!$data) return false;
+			break;
 		}
-		// Spieler
+	}
+	if (is_null($data)) {
 		$sql = 'SELECT persons.person_id
 				, CONCAT(participations.t_vorname, " ", IFNULL(CONCAT(participations.t_namenszusatz, " "), ""), participations.t_nachname) AS spieler
 				, CONCAT(participations.t_vorname, " ", IFNULL(CONCAT(participations.t_namenszusatz, " "), "")) AS vorname
 				, participations.t_nachname AS nachname
 				, t_verein AS verein
 				, urkundentext
-				, standings.rank_no
 			FROM participations
 			LEFT JOIN persons USING (contact_id)
-			LEFT JOIN standings
-				ON standings.person_id = persons.person_id
-				AND standings.event_id = participations.event_id
-				AND standings.runde_no = %d
 			WHERE participations.event_id = %d AND usergroup_id = /*_ID usergroups spieler _*/
 			AND NOT ISNULL(participations.contact_id)
 			AND participations.status_category_id = /*_ID categories participation-status/participant _*/
 			%s
-			%s
-		';
-		$sql = sprintf($sql, $event['runden']
-			, $event['event_id']
-			, $where ? ' AND '.implode(' AND ', $where) : ''
-			, $order_by_limit
+			ORDER BY t_nachname, t_vorname, contact_id';
+		$sql = sprintf($sql, $event['event_id']
+			, $certificate['sql_where'] ? ' AND '.implode(' AND ', $certificate['sql_where']) : ''
 		);
 		$data = wrap_db_fetch($sql, 'person_id');
 	}
-	$event['organisation_prefix'] = wrap_setting('tournaments_type_team') ? 'mit ' : '';
+
 	foreach ($data as $id => $line) {
-		$data[$id]['verein'] = $event['organisation_prefix'].$line['verein'];
-		switch ($type) {
+		$data[$id]['verein'] = ($event['organisation_prefix'] ?? '').$line['verein'];
+		switch ($certificate['type']) {
 		case 'teilnahme':
 			$text = wrap_setting('certificates_participation_text');
 			if (!$text) {
@@ -211,18 +180,6 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			$data[$id]['textzeile'] = $line['urkundentext'];
 			break;
 		} 
-	}
-	
-	if (wrap_setting('tournaments_type_single')) {
-		$i = 1;
-		foreach ($data as $person_id => $person) {
-			if ($type === 'platz' AND !empty($filter['kennung'])) {
-				$data[$person_id]['rang'] = $i;
-				$i++;
-			} else {
-				$data[$person_id]['rang'] = $person['rank_no'];
-			}
-		}
 	}
 
 	wrap_lib('tfpdf');
@@ -264,7 +221,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 				break;
 			}
 		}
-		$pdf = cms_urkunde_out($pdf, $event, $line, $type);
+		$pdf = cms_urkunde_out($pdf, $event, $line, $certificate['type']);
 		$pdf->SetAutoPageBreak(false);
 		foreach ($certificate['elements'] as $element) {
 			switch ($element['type']) {
@@ -286,11 +243,11 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 
 	$folder = wrap_setting('tmp_dir').'/urkunden/'.$event['identifier'];
 	wrap_mkdir($folder);
-	if (file_exists($folder.'/urkunde-'.$type.'.pdf')) {
-		unlink($folder.'/urkunde-'.$type.'.pdf');
+	if (file_exists($folder.'/urkunde-'.$certificate['type'].'.pdf')) {
+		unlink($folder.'/urkunde-'.$certificate['type'].'.pdf');
 	}
-	$file['name'] = $folder.'/urkunde-'.$type.'.pdf';
-	$file['send_as'] = $event['year'].' '.$event['series_short'].' Urkunden '.ucfirst($type).'.pdf';
+	$file['name'] = $folder.'/urkunde-'.$certificate['type'].'.pdf';
+	$file['send_as'] = $event['year'].' '.$event['series_short'].' Urkunden '.ucfirst($certificate['type']).'.pdf';
 	$file['etag_generate_md5'] = true;
 
 	$pdf->output('F', $file['name'], true);
