@@ -172,7 +172,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 		if (wrap_return_bytes(ini_get('memory_limit')) < wrap_return_bytes($certificate['parameters']['memory_limit']))
 			ini_set('memory_limit', $certificate['parameters']['memory_limit']);
 	}
-	$pdf = new TFPDF('P', 'pt', 'A4');		// panorama = p, DIN A4, 595 x 842
+	$pdf = new zzTFPDF('P', 'pt', 'A4');		// panorama = p, DIN A4, 595 x 842
 	$pdf->setCompression(true);
 	$pdf->setMargins(0,0);
 	if (!empty($certificate['parameters']['font_file'])) {
