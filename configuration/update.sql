@@ -42,3 +42,4 @@
 /* 2026-05-25-4 */	UPDATE categories SET sequence = 7 WHERE path = 'certificate-element/place-date';
 /* 2026-05-25-5 */	UPDATE categories SET sequence = 8 WHERE path = 'certificate-element/signature-left';
 /* 2026-05-25-6 */	UPDATE categories SET sequence = 9 WHERE path = 'certificate-element/signature-right';
+/* 2026-06-17-1 */	UPDATE categories SET parameters = CONCAT(parameters, '&show[element_medium_id]=1') WHERE path = 'certificate-element/image' AND parameters NOT LIKE '%&show[element_medium_id]=%';

@@ -8,7 +8,7 @@
  * http://www.zugzwang.org/modules/certificates
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2022, 2024 Gustaf Mossakowski
+ * @copyright Copyright © 2022, 2024, 2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -31,10 +31,13 @@ $zz['fields'][3]['title'] = 'Element';
 $zz['fields'][3]['field_name'] = 'element_category_id';
 $zz['fields'][3]['type'] = 'select';
 $zz['fields'][3]['sql'] = 'SELECT category_id, category
+		, IF(categories.parameters LIKE "%&show[element_medium_id]=1%", 1, NULL) AS show_element_medium_id
 	FROM categories
 	WHERE main_category_id = /*_ID categories certificate-element _*/
 	ORDER BY sequence, category';
+$zz['fields'][3]['sql_ignore'] = ['show_element_medium_id'];
 $zz['fields'][3]['display_field'] = 'category';
+$zz['fields'][3]['dependent_fields'][4]['if_selected'] = 'show_element_medium_id';
 
 $zz['fields'][4]['title'] = 'Image';
 $zz['fields'][4]['field_name'] = 'element_medium_id';
