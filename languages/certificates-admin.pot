@@ -1,0 +1,89 @@
+# certificates module
+# Translations, admin
+#
+# Part of »Zugzwang Project«
+# https://www.zugzwang.org/modules/certificates
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Zugzwang Project -- certificates module\n"
+"POT-Creation-Date: 2026-07-27 09:10+0000\n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: configuration/access.cfg:21
+msgid "Show and print certificates for an event"
+msgstr ""
+
+#: configuration/access.cfg:29
+msgid "allow to create and edit certificate templates"
+msgstr ""
+
+#: configuration/routes.cfg:12
+msgid "Certificate templates"
+msgstr ""
+
+#: configuration/routes.cfg:20
+msgid "Choose a certificate and edit certificate data for an event"
+msgstr ""
+
+#: configuration/routes.cfg:26
+msgid "Certificate preview file from the data folder"
+msgstr ""
+
+#: configuration/settings.cfg:21
+msgid "Line height"
+msgstr ""
+
+#: configuration/settings.cfg:25
+msgid "Font size for standard text, e. g. footer"
+msgstr ""
+
+#: configuration/settings.cfg:29
+msgid "Text on attendance certificates"
+msgstr ""
+
+#: configuration/settings.cfg:37
+msgid "No. of people/teams in the placement that will get a placement certificate (others might get an attendance certificate)"
+msgstr ""
+
+#: configuration/settings.cfg:44
+msgid "No. of females in the placement that will get a placement certificate"
+msgstr ""
+
+#: configuration/settings.cfg:49
+msgid "Folder for certificate preview files"
+msgstr ""
+
+#: configuration/settings.cfg:54
+msgid "Main title on certificates; the event year is appended when tournaments_edition is not set"
+msgstr ""
+
+#: configuration/settings.cfg:58
+msgid "Subtitle on certificates; {age_max} is replaced with the tournament age limit"
+msgstr ""
+
+#: configuration/settings.cfg:62
+msgid "Subtitle on certificates for tournaments with separate female standings; {age_max} is replaced with the tournament age limit"
+msgstr ""
+
+#: configuration/settings.cfg:66
+msgid "Line above the certificate title; {tournaments_edition} is replaced with the tournament edition number"
+msgstr ""
+
+#: configuration/settings.cfg:70
+msgid "Font filename for bold font (without path, but with extension)"
+msgstr ""
+
+#: configuration/settings.cfg:73
+msgid "Font filename for regular font (without path, but with extension)"
+msgstr ""
+
+#: configuration/settings.cfg:76
+msgid "Increase PHP memory limit, if needed for certificate"
+msgstr ""
