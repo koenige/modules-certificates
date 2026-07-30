@@ -1,0 +1,19 @@
+{
+    "certificateelements": {
+        "title": "Elements of Certificates",
+        "parameter_field": "parameters",
+        "audience": [
+            "editor"
+        ]
+    },
+    "certificates": {
+        "title": "Certificates",
+        "parameter_field": "parameters",
+        "audience": [
+            "editor"
+        ]
+    },
+    "events_certificates": {
+        "title": "Certificates for an Event"
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "certificateelements-parameters": [
+        {
+            "title": "Elements of Certificates parameters",
+            "language": "en",
+            "package": "certificates",
+            "identifier": "certificateelements-parameters",
+            "type": "parameters",
+            "audience": [
+                "editor"
+            ],
+            "table": "certificateelements",
+            "parameter_field": "parameters"
+        },
+        {
+            "title": "Elemente der Urkunden-Parameter",
+            "language": "de",
+            "package": "certificates",
+            "identifier": "certificateelements-parameters",
+            "type": "parameters",
+            "audience": [
+                "editor"
+            ],
+            "table": "certificateelements",
+            "parameter_field": "parameters"
+        }
+    ],
+    "certificates-parameters": [
+        {
+            "title": "Certificates parameters",
+            "language": "en",
+            "package": "certificates",
+            "identifier": "certificates-parameters",
+            "type": "parameters",
+            "audience": [
+                "editor"
+            ],
+            "table": "certificates",
+            "parameter_field": "parameters"
+        },
+        {
+            "title": "Urkunden-Parameter",
+            "language": "de",
+            "package": "certificates",
+            "identifier": "certificates-parameters",
+            "type": "parameters",
+            "audience": [
+                "editor"
+            ],
+            "table": "certificates",
+            "parameter_field": "parameters"
+        }
+    ]
+}
