@@ -61,11 +61,11 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 
 	if ($event['series_parameter']) {
 		parse_str($event['series_parameter'], $event['series_parameter']);
-		wrap_match_module_parameters('series', $event['series_parameter'], false);
+		wrap_setting_from_table('categories/series', $event['series_parameter'], false);
 	}
 	if ($certificate['parameters']) {
 		parse_str($certificate['parameters'], $certificate['parameters']);
-		wrap_match_module_parameters('certificates', $certificate['parameters'], false);
+		wrap_setting_from_table('certificates', $certificate['parameters'], false);
 	}
 
 	// get certificate elements
