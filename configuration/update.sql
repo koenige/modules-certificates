@@ -43,3 +43,5 @@
 /* 2026-05-25-5 */	UPDATE categories SET sequence = 8 WHERE path = 'certificate-element/signature-left';
 /* 2026-05-25-6 */	UPDATE categories SET sequence = 9 WHERE path = 'certificate-element/signature-right';
 /* 2026-06-17-1 */	UPDATE categories SET parameters = CONCAT(parameters, '&show[element_medium_id]=1') WHERE path = 'certificate-element/image' AND parameters NOT LIKE '%&show[element_medium_id]=%';
+/* 2026-08-12-1 */	UPDATE categories SET parameters = REPLACE(parameters, '&alias=certificate_element/', '&alias=certificate-element/') WHERE path LIKE 'certificate-element/%' AND parameters LIKE '%&alias=certificate_element/%';
+/* 2026-08-12-2 */	UPDATE categories SET parameters = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(parameters, '&type=image', ''), '&type=logo', ''), '&type=textblock', ''), '&type=event', ''), '&type=name', ''), '&type=organisation', ''), '&type=placement', ''), '&type=place-date', ''), '&type=signature-left', ''), '&type=signature-right', '') WHERE path LIKE 'certificate-element/%' AND parameters LIKE '%&type=%';

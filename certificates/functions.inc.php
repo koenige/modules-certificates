@@ -339,3 +339,16 @@ function mf_certificates_align($value) {
 	}
 }
 
+/**
+ * element type from category alias (last path segment)
+ *
+ * @param array $element
+ * @return string
+ */
+function mf_certificates_element_type($element) {
+	$path = $element['alias'] ?? $element['path'];
+	$pos = strrpos($path, '/');
+	if ($pos === false) return '';
+	return substr($path, $pos + 1);
+}
+

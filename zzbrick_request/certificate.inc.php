@@ -74,6 +74,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			, media.filename, o_mime.extension
 			, certificateelements.parameters
 			, categories.parameters AS category_parameters
+			, categories.path
 	    FROM certificateelements
 	    LEFT JOIN categories
 	    	ON certificateelements.element_category_id = categories.category_id
@@ -91,6 +92,7 @@ function mod_certificates_certificate($params, $settings = [], $event = []) {
 			parse_str($element[$param_field], $element_params);
 			$certificate['elements'][$id] = array_merge($certificate['elements'][$id], $element_params);
 		}
+		$certificate['elements'][$id]['type'] = mf_certificates_element_type($certificate['elements'][$id]);
 	}
 	
 	$possible_types = ['teilnahme', 'spezial'];
