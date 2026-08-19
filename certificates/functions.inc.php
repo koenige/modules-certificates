@@ -125,7 +125,7 @@ function mf_certificates_event(&$pdf, $element, $event) {
 
 	$lines = [];
 	$lines[] = ['text' => mf_certificates_event_super(), 'size' => $font_size, 'weight' => $font_weight];
-	if ($event_title = mf_certificates_event_title($event, $event['series_parameter'])) {
+	if ($event_title = mf_certificates_event_title($event)) {
 		if (!empty($element['balance-title-max'])) {
 			$title_row = $element['balance-title-row'] ?? $element['balance-title-max'];
 			$title_parts = mf_certificates_balance_text($event_title
@@ -138,7 +138,7 @@ function mf_certificates_event(&$pdf, $element, $event) {
 			$lines[] = ['text' => $event_title, 'size' => $font_size, 'weight' => $font_weight];
 		}
 	}
-	$lines[] = ['text' => mf_certificates_event_sub($event, $event['series_parameter']), 'size' => $font_size_subtitle, 'weight' => $font_weight_subtitle];
+	$lines[] = ['text' => mf_certificates_event_sub($event), 'size' => $font_size_subtitle, 'weight' => $font_weight_subtitle];
 	foreach ($lines as $line) {
 		$pdf->setFont(mf_certificates_event_font($event, $line['weight']), '', $line['size']);
 		$cell_height = round($line['size'] * $line_height);
@@ -154,7 +154,7 @@ function mf_certificates_event_font($event, $font_weight) {
 }
 
 /**
- * certificate supertitle from series parameters and tournament edition
+ * certificate supertitle and tournament edition
  *
  * Uses `certificates_supertitle` with `{tournaments_edition}` replaced by the edition number.
  * If no supertitle is configured but `tournaments_edition` is set, uses `{tournaments_edition}.`
@@ -175,18 +175,17 @@ function mf_certificates_event_super() {
 }
 
 /**
- * certificate main title from series parameters
+ * certificate main title
  *
- * Uses `certificates_title` from the series category parameters. Falls back to the series
- * category name. Appends the event year when `tournaments_edition` is not set.
+ * Uses `certificates_title` setting. Falls back to the series category name.
+ * Appends the event year when `tournaments_edition` is not set.
  *
  * @param array $event event data with `series`, `year`
- * @param array $series parsed series parameters
  * @return string title text
  */
-function mf_certificates_event_title($event, $series) {
-	if (!empty($series['certificates_title'])) {
-		$title = $series['certificates_title'];
+function mf_certificates_event_title($event) {
+	if (wrap_setting('certificates_title')) {
+		$title = wrap_setting('certificates_title');
 	} elseif (!empty($event['series'])) {
 		$title = $event['series'];
 	} else {
@@ -199,20 +198,20 @@ function mf_certificates_event_title($event, $series) {
 }
 
 /**
- * certificate subtitle from series parameters
+ * certificate subtitle
  *
- * Reads `certificates_subtitle` or, for female standings, `certificates_subtitle_female`
- * from the series category parameters. Replaces `{age_max}` with the tournament age limit.
+ * Reads `certificates_subtitle` or, for female standings,
+ * `certificates_subtitle_female`, replaces `{age_max}` with the tournament age
+ * limit.
  *
  * @param array $event event data with optional `weiblich`, `age_max`
- * @param array $series parsed series parameters
  * @return string subtitle text, or empty string if not configured
  */
-function mf_certificates_event_sub($event, $series) {
-	if (!empty($event['weiblich']) && !empty($series['certificates_subtitle_female'])) {
-		$subtitle = $series['certificates_subtitle_female'];
-	} elseif (!empty($series['certificates_subtitle'])) {
-		$subtitle = $series['certificates_subtitle'];
+function mf_certificates_event_sub($event) {
+	if (!empty($event['weiblich']) && wrap_setting('certificates_subtitle_female')) {
+		$subtitle = wrap_setting('certificates_subtitle_female');
+	} elseif (wrap_setting('certificates_subtitle')) {
+		$subtitle = wrap_setting('certificates_subtitle');
 	} else {
 		return '';
 	}

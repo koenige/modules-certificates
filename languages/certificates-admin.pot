@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Zugzwang Project -- certificates module\n"
-"POT-Creation-Date: 2026-07-31 09:59+0000\n"
+"POT-Creation-Date: 2026-08-19 21:50+0000\n"
 "PO-Revision-Date: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -80,78 +80,78 @@ msgstr ""
 msgid "Subtitle on certificates; {age_max} is replaced with the tournament age limit"
 msgstr ""
 
-#: configuration/settings.cfg:86
+#: configuration/settings.cfg:88
 msgid "Subtitle on certificates for tournaments with separate female standings; {age_max} is replaced with the tournament age limit"
 msgstr ""
 
-#: configuration/settings.cfg:93
+#: configuration/settings.cfg:97
 msgid "Line above the certificate title; {tournaments_edition} is replaced with the tournament edition number"
 msgstr ""
 
-#: configuration/settings.cfg:100
+#: configuration/settings.cfg:106
 msgid "Main title on certificates; the event year is appended when tournaments_edition is not set"
 msgstr ""
 
-#: configuration/settings.cfg:106
+#: configuration/settings.cfg:114
 msgid "Font filename for bold font (without path, but with extension)"
 msgstr ""
 
-#: configuration/settings.cfg:111
+#: configuration/settings.cfg:119
 msgid "Font filename for regular font (without path, but with extension)"
 msgstr ""
 
-#: configuration/settings.cfg:117
+#: configuration/settings.cfg:125
 msgid "Font size for text or event title block (pt)"
 msgstr ""
 
-#: configuration/settings.cfg:125
+#: configuration/settings.cfg:133
 msgid "Font size for event subtitle line in event element (pt)"
 msgstr ""
 
-#: configuration/settings.cfg:130
+#: configuration/settings.cfg:138
 msgid "Font weight for event supertitle and title lines"
 msgstr ""
 
-#: configuration/settings.cfg:139
+#: configuration/settings.cfg:147
 msgid "Font weight for event subtitle line"
 msgstr ""
 
-#: configuration/settings.cfg:149
+#: configuration/settings.cfg:157
 msgid "Element height (pt)"
 msgstr ""
 
-#: configuration/settings.cfg:156
+#: configuration/settings.cfg:164
 msgid "Distance from page left to element (pt)"
 msgstr ""
 
-#: configuration/settings.cfg:163
+#: configuration/settings.cfg:171
 msgid "Line height multiplier for event title block"
 msgstr ""
 
-#: configuration/settings.cfg:171
+#: configuration/settings.cfg:179
 msgid "Increase PHP memory limit, if needed for certificate PDF generation"
 msgstr ""
 
-#: configuration/settings.cfg:176
+#: configuration/settings.cfg:184
 msgid "Vertical center position (% of page height, or pt offset for center point)"
 msgstr ""
 
-#: configuration/settings.cfg:182
+#: configuration/settings.cfg:190
 msgid "Distance from page right to element (pt); used with width for horizontal placement"
 msgstr ""
 
-#: configuration/settings.cfg:188
+#: configuration/settings.cfg:196
 msgid "Static text for textblock elements"
 msgstr ""
 
-#: configuration/settings.cfg:193
+#: configuration/settings.cfg:201
 msgid "Text alignment within the element box"
 msgstr ""
 
-#: configuration/settings.cfg:202
+#: configuration/settings.cfg:210
 msgid "Distance from page top to element (pt, or % with suffix)"
 msgstr ""
 
-#: configuration/settings.cfg:208
+#: configuration/settings.cfg:216
 msgid "Element width (pt)"
 msgstr ""
