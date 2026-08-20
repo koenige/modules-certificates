@@ -31,7 +31,7 @@ $zz['fields'][3]['title'] = 'Element';
 $zz['fields'][3]['field_name'] = 'element_category_id';
 $zz['fields'][3]['type'] = 'select';
 $zz['fields'][3]['sql'] = 'SELECT category_id, category
-		, IF(categories.parameters LIKE "%&show[element_medium_id]=1%", 1, NULL) AS show_element_medium_id
+		, IF(categories.parameters LIKE "%&form_show[certificateelements.element_medium_id]=1%", 1, NULL) AS show_element_medium_id
 	FROM categories
 	WHERE main_category_id = /*_ID categories certificate-element _*/
 	ORDER BY sequence, category';

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Zugzwang Project -- certificates module\n"
-"POT-Creation-Date: 2026-08-19 21:50+0000\n"
+"POT-Creation-Date: 2026-08-20 22:29+0000\n"
 "PO-Revision-Date: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -116,42 +116,42 @@ msgstr ""
 msgid "Font weight for event subtitle line"
 msgstr ""
 
-#: configuration/settings.cfg:157
+#: configuration/settings.cfg:162
 msgid "Element height (pt)"
 msgstr ""
 
-#: configuration/settings.cfg:164
+#: configuration/settings.cfg:169
 msgid "Distance from page left to element (pt)"
 msgstr ""
 
-#: configuration/settings.cfg:171
+#: configuration/settings.cfg:176
 msgid "Line height multiplier for event title block"
 msgstr ""
 
-#: configuration/settings.cfg:179
+#: configuration/settings.cfg:184
 msgid "Increase PHP memory limit, if needed for certificate PDF generation"
 msgstr ""
 
-#: configuration/settings.cfg:184
+#: configuration/settings.cfg:189
 msgid "Vertical center position (% of page height, or pt offset for center point)"
 msgstr ""
 
-#: configuration/settings.cfg:190
+#: configuration/settings.cfg:195
 msgid "Distance from page right to element (pt); used with width for horizontal placement"
 msgstr ""
 
-#: configuration/settings.cfg:196
+#: configuration/settings.cfg:201
 msgid "Static text for textblock elements"
 msgstr ""
 
-#: configuration/settings.cfg:201
+#: configuration/settings.cfg:206
 msgid "Text alignment within the element box"
 msgstr ""
 
-#: configuration/settings.cfg:210
+#: configuration/settings.cfg:215
 msgid "Distance from page top to element (pt, or % with suffix)"
 msgstr ""
 
-#: configuration/settings.cfg:216
+#: configuration/settings.cfg:221
 msgid "Element width (pt)"
 msgstr ""
