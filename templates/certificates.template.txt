@@ -21,7 +21,7 @@
 %%% loop platz %%%
  | <a href="../../../%%% item identifier %%%/urkunden/platz%%% item bereich "-%s" %%%.pdf">%%% item event %%% %%% item bereich "(%s)" %%% mit Plätzen</a>
 %%% loop end %%%
-%%% if spezialurkunden %%%
+%%% if special_certificates %%%
  | <a href="../../../%%% item identifier %%%/urkunden/spezial.pdf">%%% item event %%% Spezial</a>
 %%% endif %%%
 &nbsp;– &nbsp;<a href="../../../%%% item identifier %%%/urkunden/bearbeiten/">Urkunde auswählen und beschriften</a>

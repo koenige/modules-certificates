@@ -21,9 +21,9 @@ function mod_certificates_certificates($params, $setting, $data) {
 			, CONCAT(events.date_begin, IFNULL(CONCAT("/", events.date_end), "")) AS duration
 			, (SELECT COUNT(*) FROM participations
 				WHERE NOT ISNULL(urkundentext)
-				AND event_id = events.event_id) AS spezialurkunden
+				AND event_id = events.event_id) AS special_certificates
 			, IFNULL(place, places.contact) AS place
-			, tournaments.tabellenstaende
+			, tournaments.tabellenstaende AS tournaments_standings
 		FROM events
 		LEFT JOIN tournaments USING (event_id)
 		JOIN participations
@@ -49,11 +49,11 @@ function mod_certificates_certificates($params, $setting, $data) {
 		$data['no_participants'] = true;
 	} else {
 		foreach ($data['events'] as $event_id => $event) {
-			if ($event['spezialurkunden'] === '0')
-				$data['events'][$event_id]['spezialurkunden'] = NULL;
+			if ($event['special_certificates'] === '0')
+				$data['events'][$event_id]['special_certificates'] = NULL;
 			$data['events'][$event_id]['platz'][] = ['bereich' => ''];
-			if (!$event['tabellenstaende']) continue;
-			$tabellenstaende = explode(',', $event['tabellenstaende']);
+			if (!$event['tournaments_standings']) continue;
+			$tabellenstaende = explode(',', $event['tournaments_standings']);
 			foreach ($tabellenstaende as $tabellenstand) {
 				if (!$tabellenstand) continue;
 				$data['events'][$event_id]['platz'][] = ['bereich' => $tabellenstand];

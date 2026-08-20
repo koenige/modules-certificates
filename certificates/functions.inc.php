@@ -204,19 +204,19 @@ function mf_certificates_event_title($event) {
  * `certificates_subtitle_female`, replaces `{age_max}` with the tournament age
  * limit.
  *
- * @param array $event event data with optional `weiblich`, `age_max`
+ * @param array $event
  * @return string subtitle text, or empty string if not configured
  */
 function mf_certificates_event_sub($event) {
-	if (!empty($event['weiblich']) && wrap_setting('certificates_subtitle_female')) {
+	if (!empty($event['certificates_female']) && wrap_setting('certificates_subtitle_female')) {
 		$subtitle = wrap_setting('certificates_subtitle_female');
 	} elseif (wrap_setting('certificates_subtitle')) {
 		$subtitle = wrap_setting('certificates_subtitle');
 	} else {
 		return '';
 	}
-	if ($event['age_max']) {
-		$subtitle = str_replace('{age_max}', $event['age_max'], $subtitle);
+	if (!empty($event['certificates_age_max'])) {
+		$subtitle = str_replace('{age_max}', $event['certificates_age_max'], $subtitle);
 	}
 	return $subtitle;
 }
