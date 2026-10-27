@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Zugzwang Project -- certificates module\n"
-"POT-Creation-Date: 2026-07-27 09:10+0000\n"
+"POT-Creation-Date: 2026-10-27 23:02+0000\n"
 "PO-Revision-Date: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: zzbrick_tables/certificateelements.php:59
+#: zzbrick_tables/certificateelements.php:57
 #: zzbrick_tables/certificates.php:60
 msgid "Parameters"
 msgstr ""
