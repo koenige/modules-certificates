@@ -31,7 +31,7 @@ if (wrap_path('certificates_preview_file', '', ['testing' => 1])) {
 		'string3' => 'jpeg'
 	];
 	$zz['fields'][15]['path_web'] = [
-		'area' => 'certificates_preview_file',
+		'route' => 'certificates_preview_file',
 		'fields' => ['identifier']
 	];
 	$zz['fields'][15]['optional_image'] = true;

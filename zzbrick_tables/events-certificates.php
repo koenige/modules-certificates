@@ -32,7 +32,7 @@ $zz['fields'][2]['search'] = 'CONCAT(events.event, " ", IFNULL(event_year, YEAR(
 $zz['fields'][2]['unique'] = true;
 $zz['fields'][2]['if']['where']['hide_in_form'] = true;
 $zz['fields'][2]['link'] = [
-	'area' => 'events_internal_event',
+	'route' => 'events_internal_event',
 	'fields' => ['event_identifier']
 ];
 $zz['fields'][2]['dont_show_where_class'] = true;
